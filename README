@@ -1,12 +1,20 @@
 EDIT
 
-A text editor based on uEmacs/PK 4.0 which is based on MicroEMACS 3.9.
+    A text editor based on uEmacs/PK 4.0 which is based on MicroEMACS 3.9.
 
-The goal is to tweak this enough that it can become my personal text editor.
-It is also intended to deviate quite a bit from the original source, and be
-rewritten over time.
+    The goal is to tweak this enough that it can become my personal text editor.
+    It is also intended to deviate quite a bit from the original source, and be
+    rewritten over time.
 
-Given that it still has most of the original code, the copyright info for
-that code can be found here:
 
-	https://github.com/torvalds/uemacs/blob/master/README
+COPYRIGHT
+
+    Given that it still has most of the original code, the copyright info for
+    that code can be found here:
+
+        https://github.com/torvalds/uemacs/blob/master/README
+
+
+FORKED FROM
+
+    This deviated from torvalds/uemacs at 1cdcf9df88144049750116e36fe20c8c39fa2517
