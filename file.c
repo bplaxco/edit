@@ -16,10 +16,7 @@
 #include "line.h"
 #include "util.h"
 
-#if defined(PKCODE)
-/* Max number of lines from one file. */
-#define	MAXNLINE 10000000
-#endif
+#define	MAXNLINE 10000000 /* Max number of lines from one file. */
 
 /*
  * Read a file into the current
@@ -225,19 +222,13 @@ int readin(char *fname, int lockfl)
 	int nline;
 	char mesg[NSTRING];
 
-#if	(FILOCK && BSD) || SVR4
 	if (lockfl && lockchk(fname) == ABORT)
-#if PKCODE
 	{
 		s = FIOFNF;
 		bp = curbp;
 		strcpy(bp->b_fname, "");
 		goto out;
 	}
-#else
-		return ABORT;
-#endif
-#endif
 #if	CRYPT
 	s = resetkey();
 	if (s != TRUE)
@@ -269,12 +260,10 @@ int readin(char *fname, int lockfl)
 			s = FIOMEM;	/* Keep message on the  */
 			break;	/* display.             */
 		}
-#if	PKCODE
 		if (nline > MAXNLINE) {
 			s = FIOMEM;
 			break;
 		}
-#endif
 		lp2 = lback(curbp->b_linep);
 		lp2->l_fp = lp1;
 		lp1->l_fp = curbp->b_linep;
@@ -332,24 +321,9 @@ void makename(char *bname, char *fname)
 	while (*cp1 != 0)
 		++cp1;
 
-#if     VMS
-#if	PKCODE
-	while (cp1 != &fname[0] && cp1[-1] != ':' && cp1[-1] != ']'
-	       && cp1[-1] != '>')
-#else
-	while (cp1 != &fname[0] && cp1[-1] != ':' && cp1[-1] != ']')
-#endif
-		--cp1;
-#endif
-#if     MSDOS
-	while (cp1 != &fname[0] && cp1[-1] != ':' && cp1[-1] != '\\'
-	       && cp1[-1] != '/')
-		--cp1;
-#endif
-#if     V7 | USG | BSD
 	while (cp1 != &fname[0] && cp1[-1] != '/')
 		--cp1;
-#endif
+
 	cp2 = &bname[0];
 	while (cp2 != &bname[NBUFN - 1] && *cp1 != 0 && *cp1 != ';')
 		*cp2++ = *cp1++;

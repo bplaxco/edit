@@ -22,7 +22,6 @@
 #include "efunc.h"
 
 #if TERMCAP
-
 #if UNIX
 #include <signal.h>
 #endif
