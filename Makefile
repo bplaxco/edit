@@ -41,6 +41,8 @@ $(PROGRAM): $(OBJ)
 clean:
 	rm -f $(PROGRAM) tags *.o
 
+test: clean $(PROGRAM)
+
 install: $(PROGRAM)
 	cp $(PROGRAM) ${BINDIR}
 	cp emacs.hlp ${LIBDIR}
