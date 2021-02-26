@@ -9,8 +9,12 @@
 #define EPATH_H_
 
 /*	possible names and paths of help files under different OSs	*/
-static char *pathname[] = {
-    ".emacsrc",        "emacs.hlp",   "/usr/global/lib/", "/usr/local/bin/",
-    "/usr/local/lib/", "/usr/local/", "/usr/lib/",        ""};
+static char *pathname[] = {".emacsrc",
+                           "/usr/global/lib/",
+                           "/usr/local/bin/",
+                           "/usr/local/lib/",
+                           "/usr/local/",
+                           "/usr/lib/",
+                           ""};
 
 #endif /* EPATH_H_ */

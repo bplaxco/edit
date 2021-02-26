@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 
+#include "ehelp.h"
 #include "edef.h"
 #include "efunc.h"
 #include "epath.h"
@@ -16,43 +17,80 @@
 #include "line.h"
 #include "util.h"
 
+int insert_text(struct buffer *bp, const char *text) {
+  /* TODO: Make this generic and add it to the line file */
+  int line_i = 0;
+  int line_max = 256;
+  int line_n = 0;
+  char line[line_max];
+  struct line *lp1;
+  struct line *lp2;
+
+  int text_n = strlen(text);
+
+  for (int i = 0; i < text_n; i++) {
+    char c = text[i];
+
+    if (line_i >= line_max) {
+      /* It won't be pretty but it should stop an overflow */
+      line_i = 0;
+    }
+
+    if (c == '\n') {
+      line[line_i] = '\0';
+      line_i = 0;
+      line_n = strlen(line);
+
+      if ((lp1 = lalloc(line_n)) == NULL) {
+        return false;
+      }
+
+      lp2 = lback(bp->b_linep);
+      lp2->l_fp = lp1;
+      lp1->l_fp = bp->b_linep;
+      lp1->l_bp = lp2;
+      bp->b_linep->l_bp = lp1;
+
+      for (int lp_i = 0; lp_i < line_n; ++lp_i)
+        lputc(lp1, lp_i, line[lp_i]);
+
+    } else {
+      line[line_i] = c;
+      line_i++;
+    }
+  }
+
+  return true;
+}
+
 int help(int f, int n) { /* give me some help!!!!
                             bring up a fake buffer and read the help file
                             into it with view mode                 */
   struct window *wp;     /* scaning pointer to windows */
   struct buffer *bp;     /* buffer pointer to help */
-  char *fname = NULL;    /* ptr to file returned by flook() */
 
   /* first check if we are already here */
-  bp = bfind("emacs.hlp", false, BFINVS);
-
-  if (bp == NULL) {
-    fname = flook(pathname[1], false);
-    if (fname == NULL) {
-      mlwrite("(Help file is not online)");
-      return false;
-    }
-  }
+  bp = bfind("*help*", true, BFINVS);
 
   /* split the current window to make room for the help stuff */
   if (splitwind(false, 1) == false)
     return false;
 
-  if (bp == NULL) {
-    /* and read the stuff in */
-    if (getfile(fname, false) == false)
-      return false;
-  } else
-    swbuffer(bp);
+  swbuffer(bp);
+
+  if (insert_text(bp, HELP_TEXT) == false)
+    return false;
 
   /* make this window in VIEW mode, update all mode lines */
   curwp->w_bufp->b_mode |= MDVIEW;
   curwp->w_bufp->b_flag |= BFINVS;
   wp = wheadp;
+
   while (wp != NULL) {
     wp->w_flag |= WFMODE;
     wp = wp->w_wndp;
   }
+
   return true;
 }
 
@@ -523,7 +561,7 @@ char *flook(char *fname, int hflag) {
 #endif
 
   /* look it up via the old table method */
-  for (i = 2; i < ARRAY_SIZE(pathname); i++) {
+  for (i = 1; i < ARRAY_SIZE(pathname); i++) {
     strcpy(fspec, pathname[i]);
     strcat(fspec, fname);
 

@@ -48,10 +48,9 @@ test: clean $(PROGRAM)
 
 install: $(PROGRAM)
 	cp $(PROGRAM) ${BINDIR}
-	cp emacs.hlp ${LIBDIR}
 	cp emacs.rc ${LIBDIR}/.emacsrc
 	chmod 755 ${BINDIR}/$(PROGRAM)
-	chmod 644 ${LIBDIR}/emacs.hlp ${LIBDIR}/.emacsrc
+	chmod 644 ${LIBDIR}/.emacsrc
 
 tags:	${SRC}
 	@rm -f tags

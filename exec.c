@@ -534,7 +534,6 @@ int dobuf(struct buffer *bp) {
     if (*eline == ';' || *eline == 0)
       goto onward;
 
-#if DEBUGM
     /* if $debug == true, every line to execute
        gets echoed and a key needs to be pressed to continue
        ^G will abort the command */
@@ -586,7 +585,6 @@ int dobuf(struct buffer *bp) {
       if (c == metac)
         macbug = false;
     }
-#endif
 
     /* Parse directives here.... */
     dirnum = -1;

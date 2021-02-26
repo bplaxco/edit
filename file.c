@@ -265,6 +265,7 @@ int readin(char *fname, int lockfl) {
       break;
     }
 
+    /* TODO: replace this with a generic line loader */
     lp2 = lback(curbp->b_linep);
     lp2->l_fp = lp1;
     lp1->l_fp = curbp->b_linep;

@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
 
   /* Initialize the editor. */
   vtinit();       /* Display */
-  edinit("main"); /* Buffers, windows */
+  edinit("*scratch*"); /* Buffers, windows */
   varinit();      /* user variables */
 
   viewflag = false;   /* view mode defaults off in command line */
@@ -280,7 +280,7 @@ int main(int argc, char **argv) {
   discmd = true; /* P.K. */
 
   /* if there are any files to read, read the first one! */
-  bp = bfind("main", false, 0);
+  bp = bfind("*scratch*", false, 0);
   if (firstfile == false && (gflags & GFREAD)) {
     swbuffer(firstbp);
     zotbuf(bp);

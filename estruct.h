@@ -263,9 +263,7 @@ struct buffer {
   char b_flag;           /* Flags                        */
   char b_fname[NFILEN];  /* File name                    */
   char b_bname[NBUFN];   /* Buffer name                  */
-#if CRYPT
   char b_key[NPAT]; /* current encrypted key        */
-#endif
 };
 
 #define BFINVS 0x01 /* Internal invisable buffer    */
