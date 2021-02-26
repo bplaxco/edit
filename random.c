@@ -764,36 +764,28 @@ int killtext(int f, int n) {
  *
  * int f, n;		default and argument
  */
-int setemode(int f, int n) {
-  return adjustmode(true, false);
-}
+int setemode(int f, int n) { return adjustmode(true, false); }
 
 /*
  * prompt and delete an editor mode
  *
  * int f, n;		default and argument
  */
-int delmode(int f, int n) {
-  return adjustmode(false, false);
-}
+int delmode(int f, int n) { return adjustmode(false, false); }
 
 /*
  * prompt and set a global editor mode
  *
  * int f, n;		default and argument
  */
-int setgmode(int f, int n) {
-  return adjustmode(true, true);
-}
+int setgmode(int f, int n) { return adjustmode(true, true); }
 
 /*
  * prompt and delete a global editor mode
  *
  * int f, n;		default and argument
  */
-int delgmode(int f, int n) {
-  return adjustmode(false, true);
-}
+int delgmode(int f, int n) { return adjustmode(false, true); }
 
 /*
  * change the editor mode status
@@ -802,9 +794,9 @@ int delgmode(int f, int n) {
  * int global;		true = global flag,  false = current buffer flag
  */
 int adjustmode(int kind, int global) {
-  char *scan; /* scanning pointer to convert prompt */
-  int i;      /* loop index */
-  int status; /* error return on input */
+  char *scan;      /* scanning pointer to convert prompt */
+  int i;           /* loop index */
+  int status;      /* error return on input */
   char prompt[50]; /* string to prompt user with */
   char cbuf[NPAT]; /* buffer to recieve mode name into */
 
