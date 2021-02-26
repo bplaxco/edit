@@ -269,7 +269,6 @@ int backline(int f, int n)
 	return TRUE;
 }
 
-#if	WORDPRO
 static int is_new_para(void)
 {
 	int i, len;
@@ -279,10 +278,8 @@ static int is_new_para(void)
 	for (i = 0; i < len; i++) {
 		int c = lgetc(curwp->w_dotp, i);
 		if (c == ' ' || c == TAB) {
-#if PKCODE
 			if (justflag)
 				continue;
-#endif
 			return 1;
 		}
 		if (!isletter(c))
@@ -372,7 +369,6 @@ int gotoeop(int f, int n)
 	curwp->w_flag |= WFMOVE;  /* force screen update */
 	return TRUE;
 }
-#endif
 
 /*
  * Scroll forward by a specified number of lines, or by a full page if no
@@ -385,34 +381,26 @@ int forwpage(int f, int n)
 	struct line *lp;
 
 	if (f == FALSE) {
-#if SCROLLCODE
 		if (term.t_scroll != NULL)
 			if (overlap == 0)
 				n = curwp->w_ntrows / 3 * 2;
 			else
 				n = curwp->w_ntrows - overlap;
 		else
-#endif
 			n = curwp->w_ntrows - 2;  /* Default scroll. */
 		if (n <= 0)	/* Forget the overlap. */
 			n = 1;	/* If tiny window. */
 	} else if (n < 0)
 		return backpage(f, -n);
-#if     CVMVAS
 	else			/* Convert from pages. */
 		n *= curwp->w_ntrows;	/* To lines. */
-#endif
 	lp = curwp->w_linep;
 	while (n-- && lp != curbp->b_linep)
 		lp = lforw(lp);
 	curwp->w_linep = lp;
 	curwp->w_dotp = lp;
 	curwp->w_doto = 0;
-#if SCROLLCODE
 	curwp->w_flag |= WFHARD | WFKILLS;
-#else
-	curwp->w_flag |= WFHARD;
-#endif
 	return TRUE;
 }
 
@@ -427,34 +415,26 @@ int backpage(int f, int n)
 	struct line *lp;
 
 	if (f == FALSE) {
-#if SCROLLCODE
 		if (term.t_scroll != NULL)
 			if (overlap == 0)
 				n = curwp->w_ntrows / 3 * 2;
 			else
 				n = curwp->w_ntrows - overlap;
 		else
-#endif
 			n = curwp->w_ntrows - 2; /* Default scroll. */
 		if (n <= 0)	/* Don't blow up if the. */
 			n = 1;	/* Window is tiny. */
 	} else if (n < 0)
 		return forwpage(f, -n);
-#if     CVMVAS
 	else  /* Convert from pages. */
 		n *= curwp->w_ntrows;  /* To lines. */
-#endif
 	lp = curwp->w_linep;
 	while (n-- && lback(lp) != curbp->b_linep)
 		lp = lback(lp);
 	curwp->w_linep = lp;
 	curwp->w_dotp = lp;
 	curwp->w_doto = 0;
-#if SCROLLCODE
 	curwp->w_flag |= WFHARD | WFINS;
-#else
-	curwp->w_flag |= WFHARD;
-#endif
 	return TRUE;
 }
 
