@@ -2,16 +2,16 @@ PROGRAM=edit
 
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 
-SRC=ansi.c basic.c bind.c buffer.c crypt.c display.c eval.c exec.c \
+SRC=basic.c bind.c buffer.c crypt.c display.c eval.c exec.c \
 	file.c fileio.c ibmpc.c input.c isearch.c line.c lock.c main.c \
 	pklock.c posix.c random.c region.c search.c spawn.c tcap.c \
-	termio.c vt52.c window.c word.c names.c globals.c version.c \
+	termio.c window.c word.c names.c globals.c version.c \
 	usage.c wrapper.c utf8.c util.c
 
-OBJ=ansi.o basic.o bind.o buffer.o crypt.o display.o eval.o exec.o \
+OBJ=basic.o bind.o buffer.o crypt.o display.o eval.o exec.o \
 	file.o fileio.o ibmpc.o input.o isearch.o line.o lock.o main.o \
 	pklock.o posix.o random.o region.o search.o spawn.o tcap.o \
-	termio.o vt52.o window.o word.o names.o globals.o version.o \
+	termio.o window.o word.o names.o globals.o version.o \
 	usage.o wrapper.o utf8.o util.o
 
 CC=clang
@@ -57,7 +57,6 @@ tags:	${SRC}
 .c.o:
 	${CC} ${CFLAGS} ${DEFINES} -c $*.c
 
-ansi.o: ansi.c estruct.h edef.h
 basic.o: basic.c estruct.h edef.h
 bind.o: bind.c estruct.h edef.h epath.h
 buffer.o: buffer.c estruct.h edef.h
@@ -82,6 +81,5 @@ spawn.o: spawn.c estruct.h edef.h
 tcap.o: tcap.c estruct.h edef.h
 termio.o: termio.c estruct.h edef.h
 utf8.o: utf8.c utf8.h
-vt52.o: vt52.c estruct.h edef.h
 window.o: window.c estruct.h edef.h
 word.o: word.c estruct.h edef.h
