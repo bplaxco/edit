@@ -8,9 +8,9 @@ int kbdm[NKBDM];         /* Macro                        */
 char *execstr = NULL;    /* pointer to string to execute */
 char golabel[NPAT] = ""; /* current line to go to        */
 int execlevel = 0;       /* execution IF level           */
-int eolexist = TRUE;     /* does clear to EOL exist      */
-int revexist = FALSE;    /* does reverse video exist?    */
-int flickcode = FALSE;   /* do flicker supression?       */
+int eolexist = true;     /* does clear to EOL exist      */
+int revexist = false;    /* does reverse video exist?    */
+int flickcode = false;   /* do flicker supression?       */
 char *modename[] = {     /* name of modes                */
                     "WRAP", "CMODE", "SPELL", "EXACT", "VIEW",
                     "OVER", "MAGIC", "CRYPT", "ASAVE", "UTF-8"};
@@ -24,12 +24,12 @@ int gfcolor = 7;                /* global forgrnd color (white) */
 int gbcolor = 0;                /* global backgrnd color (black) */
 int gasave = 256;               /* global ASAVE size            */
 int gacount = 256;              /* count until next ASAVE       */
-int sgarbf = TRUE;              /* TRUE if screen is garbage    */
-int mpresf = FALSE;             /* TRUE if message in last line */
-int clexec = FALSE;             /* command line execution flag  */
-int mstore = FALSE;             /* storing text to macro flag   */
-int discmd = TRUE;              /* display command flag         */
-int disinp = TRUE;              /* display input characters     */
+int sgarbf = true;              /* true if screen is garbage    */
+int mpresf = false;             /* true if message in last line */
+int clexec = false;             /* command line execution flag  */
+int mstore = false;             /* storing text to macro flag   */
+int discmd = true;              /* display command flag         */
+int disinp = true;              /* display input characters     */
 struct buffer *bstore = NULL;   /* buffer to store macro text to */
 int vtrow = 0;                  /* Row location of SW cursor */
 int vtcol = 0;                  /* Column location of SW cursor */
@@ -42,52 +42,38 @@ int metac = CONTROL | '[';      /* current meta character */
 int ctlxc = CONTROL | 'X';      /* current control X prefix char */
 int reptc = CONTROL | 'U';      /* current universal repeat char */
 int abortc = CONTROL | 'G';     /* current abort command char   */
-
-int quotec = 0x11;  /* quote char during mlreply() */
-int tabmask = 0x07; /* tabulator mask */
-char *cname[] = {   /* names of colors              */
-                 "BLACK",
-                 "RED",
-                 "GREEN",
-                 "YELLOW",
-                 "BLUE",
-                 "MAGENTA",
-                 "CYAN",
-                 "WHITE"
-#if PKCODE & IBMPC
-                 ,
-                 "HIGH"
-#endif
-};
+int quotec = 0x11;              /* quote char during mlreply() */
+int tabmask = 0x07;             /* tabulator mask */
+char *cname[] = {               /* names of colors */
+                 "BLACK", "RED",     "GREEN", "YELLOW",
+                 "BLUE",  "MAGENTA", "CYAN",  "WHITE"};
 struct kill *kbufp = NULL;     /* current kill buffer chunk pointer    */
 struct kill *kbufh = NULL;     /* kill buffer header pointer           */
 int kused = KBLOCK;            /* # of bytes used in kill buffer       */
 struct window *swindow = NULL; /* saved window pointer                 */
-int cryptflag = FALSE;         /* currently encrypting?                */
+int cryptflag = false;         /* currently encrypting?                */
 int *kbdptr;                   /* current position in keyboard buf */
 int *kbdend = &kbdm[0];        /* ptr to end of the keyboard */
 int kbdmode = STOP;            /* current keyboard macro mode  */
 int kbdrep = 0;                /* number of repetitions        */
-int restflag = FALSE;          /* restricted use?              */
+int restflag = false;          /* restricted use?              */
 int lastkey = 0;               /* last keystoke                */
 int seed = 0;                  /* random number seed           */
 long envram = 0l;              /* # of bytes current in use by malloc */
-int macbug = FALSE;            /* macro debuging flag          */
+int macbug = false;            /* macro debuging flag          */
 char errorm[] = "ERROR";       /* error literal                */
 char truem[] = "TRUE";         /* true literal                 */
 char falsem[] = "FALSE";       /* false litereal               */
-int cmdstatus = TRUE;          /* last command status          */
+int cmdstatus = true;          /* last command status          */
 char palstr[49] = "";          /* palette string               */
 int saveflag = 0;              /* Flags, saved with the $target var */
 char *fline = NULL;            /* dynamic return line */
 int flen = 0;                  /* current length of fline */
 int rval = 0;                  /* return value of a subprocess */
-#if PKCODE
-int nullflag = FALSE; /* accept null characters */
-int justflag = FALSE; /* justify, don't fill */
-#endif
-int overlap = 0;     /* line overlap in forw/back page */
-int scrollcount = 1; /* number of lines to scroll */
+int nullflag = false;          /* accept null characters */
+int justflag = false;          /* justify, don't fill */
+int overlap = 0;               /* line overlap in forw/back page */
+int scrollcount = 1;           /* number of lines to scroll */
 
 /* uninitialized global definitions */
 
@@ -126,7 +112,5 @@ int matchoff = 0;
 char *dname[] = {"if",   "else",  "endif",    "goto",  "return",
                  "endm", "while", "endwhile", "break", "force"};
 
-#if DEBUGM
 /*	vars needed for macro debugging output	*/
 char outline[NSTRING]; /* global string to hold debug line text */
-#endif

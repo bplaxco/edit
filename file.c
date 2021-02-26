@@ -32,10 +32,10 @@ int fileread(int f, int n) {
   if (restflag) /* don't allow this command if restricted */
     return resterr();
 
-  if ((s = mlreply("Read file: ", fname, NFILEN)) != TRUE)
+  if ((s = mlreply("Read file: ", fname, NFILEN)) != true)
     return s;
 
-  return readin(fname, TRUE);
+  return readin(fname, true);
 }
 
 /*
@@ -55,13 +55,13 @@ int insfile(int f, int n) {
   if (curbp->b_mode & MDVIEW) /* don't allow this command if      */
     return rdonly();          /* we are in read only mode     */
 
-  if ((s = mlreply("Insert file: ", fname, NFILEN)) != TRUE)
+  if ((s = mlreply("Insert file: ", fname, NFILEN)) != true)
     return s;
 
-  if ((s = ifile(fname)) != TRUE)
+  if ((s = ifile(fname)) != true)
     return s;
 
-  return reposition(TRUE, -1);
+  return reposition(true, -1);
 }
 
 /*
@@ -80,10 +80,10 @@ int filefind(int f, int n) {
   if (restflag) /* don't allow this command if restricted */
     return resterr();
 
-  if ((s = mlreply("Find file: ", fname, NFILEN)) != TRUE)
+  if ((s = mlreply("Find file: ", fname, NFILEN)) != true)
     return s;
 
-  return getfile(fname, TRUE);
+  return getfile(fname, true);
 }
 
 int viewfile(int f, int n) { /* visit a file in VIEW mode */
@@ -94,10 +94,10 @@ int viewfile(int f, int n) { /* visit a file in VIEW mode */
   if (restflag) /* don't allow this command if restricted */
     return resterr();
 
-  if ((s = mlreply("View file: ", fname, NFILEN)) != TRUE)
+  if ((s = mlreply("View file: ", fname, NFILEN)) != true)
     return s;
 
-  s = getfile(fname, FALSE);
+  s = getfile(fname, false);
   if (s) { /* if we succeed, put it in view mode */
     curwp->w_bufp->b_mode |= MDVIEW;
 
@@ -116,18 +116,18 @@ static int resetkey(void) { /* reset the encryption key if needed */
   int s;                    /* return status */
 
   /* turn off the encryption flag */
-  cryptflag = FALSE;
+  cryptflag = false;
 
   /* if we are in crypt mode */
   if (curbp->b_mode & MDCRYPT) {
     if (curbp->b_key[0] == 0) {
-      s = set_encryption_key(FALSE, 0);
-      if (s != TRUE)
+      s = set_encryption_key(false, 0);
+      if (s != true)
         return s;
     }
 
     /* let others know... */
-    cryptflag = TRUE;
+    cryptflag = true;
 
     /* and set up the key to be used! */
     /* de-encrypt it */
@@ -139,7 +139,7 @@ static int resetkey(void) { /* reset the encryption key if needed */
     myencrypt(curbp->b_key, strlen(curbp->b_key));
   }
 
-  return TRUE;
+  return true;
 }
 
 /*
@@ -166,23 +166,23 @@ int getfile(char *fname, int lockfl) {
       curwp->w_flag |= WFMODE | WFHARD;
       cknewwindow();
       mlwrite("(Old buffer)");
-      return TRUE;
+      return true;
     }
   }
   makename(bname, fname); /* New buffer name.     */
-  while ((bp = bfind(bname, FALSE, 0)) != NULL) {
+  while ((bp = bfind(bname, false, 0)) != NULL) {
     /* old buffer name conflict code */
     s = mlreply("Buffer name: ", bname, NBUFN);
     if (s == ABORT) /* ^G to just quit      */
       return s;
-    if (s == FALSE) { /* CR to clobber it     */
+    if (s == false) { /* CR to clobber it     */
       makename(bname, fname);
       break;
     }
   }
-  if (bp == NULL && (bp = bfind(bname, TRUE, 0)) == NULL) {
+  if (bp == NULL && (bp = bfind(bname, true, 0)) == NULL) {
     mlwrite("Cannot create buffer");
-    return FALSE;
+    return false;
   }
   if (--curbp->b_nwnd == 0) { /* Undisplay.           */
     curbp->b_dotp = curwp->w_dotp;
@@ -228,18 +228,18 @@ int readin(char *fname, int lockfl) {
   }
 
   s = resetkey();
-  if (s != TRUE)
+  if (s != true)
     return s;
 
   bp = curbp;                   /* Cheap.               */
-  if ((s = bclear(bp)) != TRUE) /* Might be old.        */
+  if ((s = bclear(bp)) != true) /* Might be old.        */
     return s;
 
   bp->b_flag &= ~(BFINVS | BFCHG);
   mystrscpy(bp->b_fname, fname, NFILEN);
 
   /* let a user macro get hold of things...if he wants */
-  execute(META | SPEC | 'R', FALSE, 1);
+  execute(META | SPEC | 'R', false, 1);
 
   if ((s = ffropen(fname)) == FIOERR) /* Hard file open.      */
     goto out;
@@ -308,9 +308,9 @@ out:
   }
 
   if (s == FIOERR || s == FIOFNF) /* False if error.      */
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 /*
@@ -348,7 +348,7 @@ void unqname(char *name) {
   char *sp;
 
   /* check to see if it is in the buffer list */
-  while (bfind(name, 0, FALSE) != NULL) {
+  while (bfind(name, 0, false) != NULL) {
 
     /* go to the end of the name */
     sp = name;
@@ -379,10 +379,10 @@ int filewrite(int f, int n) {
   if (restflag) /* don't allow this command if restricted */
     return resterr();
 
-  if ((s = mlreply("Write file: ", fname, NFILEN)) != TRUE)
+  if ((s = mlreply("Write file: ", fname, NFILEN)) != true)
     return s;
 
-  if ((s = writeout(fname)) == TRUE) {
+  if ((s = writeout(fname)) == true) {
     strcpy(curbp->b_fname, fname);
     curbp->b_flag &= ~BFCHG;
     wp = wheadp; /* Update mode lines.   */
@@ -413,7 +413,7 @@ int filesave(int f, int n) {
 
   if ((curbp->b_flag & BFCHG) == 0) {
     mlwrite("(No changes to save)");
-    return TRUE;
+    return true;
   }
 
   /* If there is no name, ask which one to write */
@@ -423,13 +423,13 @@ int filesave(int f, int n) {
 
   /* complain about truncated files */
   if ((curbp->b_flag & BFTRUNC) != 0) {
-    if (mlyesno("Truncated file ... write it out") == FALSE) {
+    if (mlyesno("Truncated file ... write it out") == false) {
       mlwrite("(Aborted)");
-      return FALSE;
+      return false;
     }
   }
 
-  if ((s = writeout(curbp->b_fname)) == TRUE) {
+  if ((s = writeout(curbp->b_fname)) == true) {
     curbp->b_flag &= ~BFCHG;
     wp = wheadp; /* Update mode lines.   */
     while (wp != NULL) {
@@ -456,11 +456,11 @@ int writeout(char *fn) {
   int nline;
 
   s = resetkey();
-  if (s != TRUE)
+  if (s != true)
     return s;
 
   if ((s = ffwopen(fn)) != FIOSUC) { /* Open writes message. */
-    return FALSE;
+    return false;
   }
 
   mlwrite("(Writing...)");    /* tell us were writing */
@@ -485,9 +485,9 @@ int writeout(char *fn) {
     ffclose(); /* if a write error.    */
 
   if (s != FIOSUC) /* Some sort of error.  */
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 /*
@@ -510,7 +510,7 @@ int filename(int f, int n) {
   if ((s = mlreply("Name: ", fname, NFILEN)) == ABORT)
     return s;
 
-  if (s == FALSE)
+  if (s == false)
     strcpy(curbp->b_fname, "");
   else
     strcpy(curbp->b_fname, fname);
@@ -523,7 +523,7 @@ int filename(int f, int n) {
   }
 
   curbp->b_mode &= ~MDVIEW; /* no longer read only mode */
-  return TRUE;
+  return true;
 }
 
 /*
@@ -550,13 +550,13 @@ int ifile(char *fname) {
 
   if (s == FIOFNF) { /* File not found.      */
     mlwrite("(No such file)");
-    return FALSE;
+    return false;
   }
 
   mlwrite("(Inserting file)");
 
   s = resetkey();
-  if (s != TRUE)
+  if (s != true)
     return s;
 
   /* back up a line and save the mark here */
@@ -625,7 +625,7 @@ out:
   curbp->b_marko = curwp->w_marko;
 
   if (s == FIOERR) /* False if error.      */
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }

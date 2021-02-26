@@ -24,24 +24,24 @@ int help(int f, int n) { /* give me some help!!!!
   char *fname = NULL;    /* ptr to file returned by flook() */
 
   /* first check if we are already here */
-  bp = bfind("emacs.hlp", FALSE, BFINVS);
+  bp = bfind("emacs.hlp", false, BFINVS);
 
   if (bp == NULL) {
-    fname = flook(pathname[1], FALSE);
+    fname = flook(pathname[1], false);
     if (fname == NULL) {
       mlwrite("(Help file is not online)");
-      return FALSE;
+      return false;
     }
   }
 
   /* split the current window to make room for the help stuff */
-  if (splitwind(FALSE, 1) == FALSE)
-    return FALSE;
+  if (splitwind(false, 1) == false)
+    return false;
 
   if (bp == NULL) {
     /* and read the stuff in */
-    if (getfile(fname, FALSE) == FALSE)
-      return FALSE;
+    if (getfile(fname, false) == false)
+      return false;
   } else
     swbuffer(bp);
 
@@ -53,7 +53,7 @@ int help(int f, int n) { /* give me some help!!!!
     wp->w_flag |= WFMODE;
     wp = wp->w_wndp;
   }
-  return TRUE;
+  return true;
 }
 
 int deskey(int f, int n) { /* describe the command for a certain key */
@@ -66,7 +66,7 @@ int deskey(int f, int n) { /* describe the command for a certain key */
 
   /* get the command sequence to describe
      change it to something we can print as well */
-  cmdstr(c = getckey(FALSE), &outseq[0]);
+  cmdstr(c = getckey(false), &outseq[0]);
 
   /* and dump it out */
   ostring(outseq);
@@ -78,7 +78,7 @@ int deskey(int f, int n) { /* describe the command for a certain key */
 
   /* output the command sequence */
   ostring(ptr);
-  return TRUE;
+  return true;
 }
 
 /*
@@ -101,7 +101,7 @@ int bindtokey(int f, int n) {
   kfunc = getname();
   if (kfunc == NULL) {
     mlwrite("(No such function)");
-    return FALSE;
+    return false;
   }
   ostring(" ");
 
@@ -120,7 +120,7 @@ int bindtokey(int f, int n) {
 
     /* search for an existing binding for the prefix key */
     ktp = &keytab[0];
-    found = FALSE;
+    found = false;
     while (ktp->k_fp != NULL) {
       if (ktp->k_fp == kfunc)
         unbindchar(ktp->k_code);
@@ -140,10 +140,10 @@ int bindtokey(int f, int n) {
 
   /* search the table to see if it exists */
   ktp = &keytab[0];
-  found = FALSE;
+  found = false;
   while (ktp->k_fp != NULL) {
     if (ktp->k_code == c) {
-      found = TRUE;
+      found = true;
       break;
     }
     ++ktp;
@@ -155,7 +155,7 @@ int bindtokey(int f, int n) {
     /* if we run out of binding room, bitch */
     if (ktp >= &keytab[NBINDS]) {
       mlwrite("Binding table FULL!");
-      return FALSE;
+      return false;
     }
 
     ktp->k_code = c;   /* add keycode */
@@ -164,7 +164,7 @@ int bindtokey(int f, int n) {
     ktp->k_code = 0;
     ktp->k_fp = NULL;
   }
-  return TRUE;
+  return true;
 }
 
 /*
@@ -181,7 +181,7 @@ int unbindkey(int f, int n) {
   mlwrite(": unbind-key ");
 
   /* get the command sequence to unbind */
-  c = getckey(FALSE); /* get a command sequence */
+  c = getckey(false); /* get a command sequence */
 
   /* change it to something we can print as well */
   cmdstr(c, &outseq[0]);
@@ -190,11 +190,11 @@ int unbindkey(int f, int n) {
   ostring(outseq);
 
   /* if it isn't bound, bitch */
-  if (unbindchar(c) == FALSE) {
+  if (unbindchar(c) == false) {
     mlwrite("(Key not bound)");
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 /*
@@ -209,10 +209,10 @@ int unbindchar(int c) {
 
   /* search the table to see if the key exists */
   ktp = &keytab[0];
-  found = FALSE;
+  found = false;
   while (ktp->k_fp != NULL) {
     if (ktp->k_code == c) {
-      found = TRUE;
+      found = true;
       break;
     }
     ++ktp;
@@ -220,7 +220,7 @@ int unbindchar(int c) {
 
   /* if it isn't bound, bitch */
   if (!found)
-    return FALSE;
+    return false;
 
   /* save the pointer and scan to the end of the table */
   sktp = ktp;
@@ -235,7 +235,7 @@ int unbindchar(int c) {
   /* null out the last one */
   ktp->k_code = 0;
   ktp->k_fp = NULL;
-  return TRUE;
+  return true;
 }
 
 /* describe bindings
@@ -245,8 +245,8 @@ int unbindchar(int c) {
 int desbind(int f, int n)
 #if APROP
 {
-  buildlist(TRUE, "");
-  return TRUE;
+  buildlist(true, "");
+  return true;
 }
 
 int apro(int f, int n) { /* Apropos (List functions that match a substring) */
@@ -254,10 +254,10 @@ int apro(int f, int n) { /* Apropos (List functions that match a substring) */
   int status;            /* status return */
 
   status = mlreply("Apropos string: ", mstring, NSTRING - 1);
-  if (status != TRUE)
+  if (status != true)
     return status;
 
-  return buildlist(FALSE, mstring);
+  return buildlist(false, mstring);
 }
 
 /*
@@ -277,14 +277,14 @@ int buildlist(int type, char *mstring)
   char outseq[80];        /* output buffer for keystroke sequence */
 
   /* split the current window to make room for the binding list */
-  if (splitwind(FALSE, 1) == FALSE)
-    return FALSE;
+  if (splitwind(false, 1) == false)
+    return false;
 
   /* and get a buffer for it */
-  bp = bfind("*Binding list*", TRUE, 0);
-  if (bp == NULL || bclear(bp) == FALSE) {
+  bp = bfind("*Binding list*", true, 0);
+  if (bp == NULL || bclear(bp) == false) {
     mlwrite("Can not display binding list");
-    return FALSE;
+    return false;
   }
 
   /* let us know this is in progress */
@@ -321,9 +321,9 @@ int buildlist(int type, char *mstring)
 
 #if APROP
     /* if we are executing an apropos command..... */
-    if (type == FALSE &&
+    if (type == false &&
         /* and current string doesn't include the search string */
-        strinc(outseq, mstring) == FALSE)
+        strinc(outseq, mstring) == false)
       goto fail;
 #endif
     /* search down any keys bound to this */
@@ -339,8 +339,8 @@ int buildlist(int type, char *mstring)
         strcat(outseq, "\n");
 
         /* and add it as a line into the buffer */
-        if (linstr(outseq) != TRUE)
-          return FALSE;
+        if (linstr(outseq) != true)
+          return false;
 
         cpos = 0; /* and clear the line */
       }
@@ -351,8 +351,8 @@ int buildlist(int type, char *mstring)
     if (cpos > 0) {
       outseq[cpos++] = '\n';
       outseq[cpos] = 0;
-      if (linstr(outseq) != TRUE)
-        return FALSE;
+      if (linstr(outseq) != true)
+        return false;
     }
 
   fail: /* and on to the next name */
@@ -369,7 +369,7 @@ int buildlist(int type, char *mstring)
     wp = wp->w_wndp;
   }
   mlwrite(""); /* clear the mode line */
-  return TRUE;
+  return true;
 }
 
 #if APROP
@@ -401,12 +401,12 @@ int strinc(char *source, char *sub) {
 
     /* yes, return a success */
     if (*tp == 0)
-      return TRUE;
+      return true;
 
     /* no, onward */
     sp++;
   }
-  return FALSE;
+  return false;
 }
 #endif
 
@@ -443,13 +443,13 @@ int startup(char *sfname) {
 
   /* look up the startup file */
   if (*sfname != 0)
-    fname = flook(sfname, TRUE);
+    fname = flook(sfname, true);
   else
-    fname = flook(pathname[0], TRUE);
+    fname = flook(pathname[0], true);
 
   /* if it isn't around, don't sweat it */
   if (fname == NULL)
-    return TRUE;
+    return true;
 
   /* otherwise, execute the sucker */
   return dofile(fname);

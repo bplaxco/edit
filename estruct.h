@@ -1,5 +1,3 @@
-#ifndef ESTRUCT_H_
-#define ESTRUCT_H_
 /*      ESTRUCT.H
  *
  *      Structure and preprocessor defines
@@ -9,6 +7,10 @@
  *      substantially modified by Daniel Lawrence
  *  modified by Petri Kutvonen
  */
+#ifndef ESTRUCT_H_
+#define ESTRUCT_H_
+
+#include <stdbool.h>
 
 #define MAXCOL 500
 #define MAXROW 500
@@ -92,8 +94,6 @@
 #define CTLX 0x40000000    /* ^X flag, or'ed in            */
 #define SPEC 0x80000000    /* special key (function keys)  */
 
-#define FALSE 0  /* False, no, bad, etc.         */
-#define TRUE 1   /* True, yes, good, etc.        */
 #define ABORT 2  /* Death, ^G, abort, etc.       */
 #define FAILED 3 /* not-quite fatal false return */
 #define STOP 0   /* keyboard macro not in use    */

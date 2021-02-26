@@ -27,7 +27,7 @@
 #endif
 
 /*
- * Ask a yes or no question in the message line. Return either TRUE, FALSE, or
+ * Ask a yes or no question in the message line. Return either true, false, or
  * ABORT. The ABORT status is returned if the user bumps out of the question
  * with a ^G. Used any time a confirmation is required.
  */
@@ -48,10 +48,10 @@ int mlyesno(char *prompt) {
       return ABORT;
 
     if (c == 'y' || c == 'Y')
-      return TRUE;
+      return true;
 
     if (c == 'n' || c == 'N')
-      return FALSE;
+      return false;
   }
 }
 
@@ -114,13 +114,13 @@ fn_t getname(void) {
 
   /* if we are executing a command line get the next arg and match it */
   if (clexec) {
-    if (macarg(buf) != TRUE)
+    if (macarg(buf) != true)
       return NULL;
     return fncmatch(&buf[0]);
   }
 
   /* build a name string from the keyboard */
-  while (TRUE) {
+  while (true) {
     c = tgetc();
 
     /* if we are at the end, just match it */
@@ -131,7 +131,7 @@ fn_t getname(void) {
       return fncmatch(&buf[0]);
 
     } else if (c == ectoc(abortc)) { /* Bell, abort */
-      ctrlg(FALSE, 0);
+      ctrlg(false, 0);
       TTflush();
       return NULL;
 
@@ -186,7 +186,7 @@ fn_t getname(void) {
 
             /* and now, attempt to partial complete the string, char at a time
              */
-            while (TRUE) {
+            while (true) {
               /* add the next char in */
               buf[cpos] = ffp->n_name[cpos];
 
@@ -242,7 +242,7 @@ int tgetc(void) {
       kbdmode = STOP;
 #if VISMAC == 0
       /* force a screen update after all is done */
-      update(FALSE);
+      update(false);
 #endif
     } else {
 
@@ -433,7 +433,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar) {
 #endif
 
   cpos = 0;
-  quotef = FALSE;
+  quotef = false;
 
   /* prompt the user for the input string */
   mlwrite(prompt);
@@ -456,29 +456,29 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar) {
       c = CONTROL | 0x40 | '\n';
 
     /* if they hit the line terminate, wrap it up */
-    if (c == eolchar && quotef == FALSE) {
+    if (c == eolchar && quotef == false) {
       buf[cpos++] = 0;
 
       /* clear the message line */
       mlwrite("");
       TTflush();
 
-      /* if we default the buffer, return FALSE */
+      /* if we default the buffer, return false */
       if (buf[0] == 0)
-        return FALSE;
+        return false;
 
-      return TRUE;
+      return true;
     }
 
     /* change from command form back to character form */
     c = ectoc(c);
 
-    if (c == ectoc(abortc) && quotef == FALSE) {
+    if (c == ectoc(abortc) && quotef == false) {
       /* Abort the input? */
-      ctrlg(FALSE, 0);
+      ctrlg(false, 0);
       TTflush();
       return ABORT;
-    } else if ((c == 0x7F || c == 0x08) && quotef == FALSE) {
+    } else if ((c == 0x7F || c == 0x08) && quotef == false) {
       /* rubout/erase */
       if (cpos != 0) {
         outstring("\b \b");
@@ -496,7 +496,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar) {
         TTflush();
       }
 
-    } else if (c == 0x15 && quotef == FALSE) {
+    } else if (c == 0x15 && quotef == false) {
       /* C-U, kill */
       while (cpos != 0) {
         outstring("\b \b");
@@ -514,7 +514,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar) {
       TTflush();
 
 #if COMPLC
-    } else if ((c == 0x09 || c == ' ') && quotef == FALSE && ffile) {
+    } else if ((c == 0x09 || c == ' ') && quotef == false && ffile) {
       /* TAB, complete file name */
       char ffbuf[255];
 #if MSDOS
@@ -635,10 +635,10 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar) {
 #endif
 #endif
 
-    } else if ((c == quotec || c == 0x16) && quotef == FALSE) {
-      quotef = TRUE;
+    } else if ((c == quotec || c == 0x16) && quotef == false) {
+      quotef = true;
     } else {
-      quotef = FALSE;
+      quotef = false;
       if (cpos < nbuf - 1) {
         buf[cpos++] = c;
 

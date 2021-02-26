@@ -93,14 +93,14 @@ extern struct window *swindow;   /* saved window pointer */
 
 extern char *dname[]; /* Directive name table.        */
 extern char *patmatch;
-extern char pat[];            /* Search pattern. */
-extern char rpat[];           /* Replacement pattern. */
-extern char sres[NBUFN];      /* Current screen resolution. */
-extern char tap[];            /* Reversed pattern array. */
-extern int curcol;            /* Cursor column */
-extern int curgoal;           /* Goal for C-P, C-N */
-extern int currow;            /* Cursor row */
-extern int lastflag;          /* Flags, last command */
+extern char pat[];       /* Search pattern. */
+extern char rpat[];      /* Replacement pattern. */
+extern char sres[NBUFN]; /* Current screen resolution. */
+extern char tap[];       /* Reversed pattern array. */
+extern int curcol;       /* Cursor column */
+extern int curgoal;      /* Goal for C-P, C-N */
+extern int currow;       /* Cursor row */
+extern int lastflag;     /* Flags, last command */
 extern int matchoff;
 extern int thisflag;          /* Flags, this command */
 extern struct buffer *bheadp; /* Head of list of buffers */

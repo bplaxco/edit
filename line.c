@@ -121,7 +121,7 @@ void lchange(int flag) {
 int insspace(int f, int n) {
   linsert(n, ' ');
   backchar(f, n);
-  return TRUE;
+  return true;
 }
 
 /*
@@ -129,15 +129,15 @@ int insspace(int f, int n) {
  */
 
 int linstr(char *instr) {
-  int status = TRUE;
+  int status = true;
   char tmpc;
 
   if (instr != NULL)
-    while ((tmpc = *instr) && status == TRUE) {
+    while ((tmpc = *instr) && status == true) {
       status = (tmpc == '\n' ? lnewline() : linsert(1, tmpc));
 
       /* Insertion error? */
-      if (status != TRUE) {
+      if (status != true) {
         mlwrite("%%Out of memory while inserting");
         break;
       }
@@ -152,8 +152,8 @@ int linstr(char *instr) {
  * hard case, the line has to be reallocated. When the window list is updated,
  * take special care; I screwed it up once. You always update dot in the
  * current window. You update mark, and a dot in another window, if it is
- * greater than the place where you did the insert. Return TRUE if all is
- * well, and FALSE on errors.
+ * greater than the place where you did the insert. Return true if all is
+ * well, and false on errors.
  */
 
 static int linsert_byte(int n, int c) {
@@ -173,10 +173,10 @@ static int linsert_byte(int n, int c) {
   if (lp1 == curbp->b_linep) { /* At the end: special  */
     if (curwp->w_doto != 0) {
       mlwrite("bug: linsert");
-      return FALSE;
+      return false;
     }
     if ((lp2 = lalloc(n)) == NULL) /* Allocate new line        */
-      return FALSE;
+      return false;
     lp3 = lp1->l_bp; /* Previous line        */
     lp3->l_fp = lp2; /* Link in              */
     lp2->l_fp = lp1;
@@ -186,12 +186,12 @@ static int linsert_byte(int n, int c) {
       lp2->l_text[i] = c;
     curwp->w_dotp = lp2;
     curwp->w_doto = n;
-    return TRUE;
+    return true;
   }
   doto = curwp->w_doto;                /* Save for later.      */
   if (lp1->l_used + n > lp1->l_size) { /* Hard: reallocate     */
     if ((lp2 = lalloc(lp1->l_used + n)) == NULL)
-      return FALSE;
+      return false;
     cp1 = &lp1->l_text[0];
     cp2 = &lp2->l_text[0];
     while (cp1 != &lp1->l_text[doto])
@@ -230,7 +230,7 @@ static int linsert_byte(int n, int c) {
     }
     wp = wp->w_wndp;
   }
-  return TRUE;
+  return true;
 }
 
 int linsert(int n, int c) {
@@ -244,10 +244,10 @@ int linsert(int n, int c) {
     for (j = 0; j < bytes; j++) {
       unsigned char c = utf8[j];
       if (!linsert_byte(1, c))
-        return FALSE;
+        return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /*
@@ -259,7 +259,7 @@ int lowrite(int c) {
   if (curwp->w_doto < curwp->w_dotp->l_used &&
       (lgetc(curwp->w_dotp, curwp->w_doto) != '\t' ||
        ((curwp->w_doto) & tabmask) == tabmask))
-    ldelchar(1, FALSE);
+    ldelchar(1, false);
   return linsert(1, c);
 }
 
@@ -267,15 +267,15 @@ int lowrite(int c) {
  * lover -- Overwrite a string at the current point
  */
 int lover(char *ostr) {
-  int status = TRUE;
+  int status = true;
   char tmpc;
 
   if (ostr != NULL)
-    while ((tmpc = *ostr) && status == TRUE) {
+    while ((tmpc = *ostr) && status == true) {
       status = (tmpc == '\n' ? lnewline() : lowrite(tmpc));
 
       /* Insertion error? */
-      if (status != TRUE) {
+      if (status != true) {
         mlwrite("%%Out of memory while overwriting");
         break;
       }
@@ -287,8 +287,8 @@ int lover(char *ostr) {
 /*
  * Insert a newline into the buffer at the current location of dot in the
  * current window. The funny ass-backwards way it does things is not a botch;
- * it just makes the last line in the file not a special case. Return TRUE if
- * everything works out and FALSE on error (memory allocation failure). The
+ * it just makes the last line in the file not a special case. Return true if
+ * everything works out and false on error (memory allocation failure). The
  * update of dot and mark is a bit easier then in the above case, because the
  * split forces more updating.
  */
@@ -310,7 +310,7 @@ int lnewline(void) {
   lp1 = curwp->w_dotp;              /* Get the address and  */
   doto = curwp->w_doto;             /* offset of "."        */
   if ((lp2 = lalloc(doto)) == NULL) /* New first half line      */
-    return FALSE;
+    return false;
   cp1 = &lp1->l_text[0]; /* Shuffle text around  */
   cp2 = &lp2->l_text[0];
   while (cp1 != &lp1->l_text[doto])
@@ -341,7 +341,7 @@ int lnewline(void) {
     }
     wp = wp->w_wndp;
   }
-  return TRUE;
+  return true;
 }
 
 int lgetchar(unicode_t *c) {
@@ -361,16 +361,16 @@ int ldelchar(long n, int kflag) {
   while (n-- > 0) {
     unicode_t c;
     if (!ldelete(lgetchar(&c), kflag))
-      return FALSE;
+      return false;
   }
-  return TRUE;
+  return true;
 }
 
 /*
  * This function deletes "n" bytes, starting at dot. It understands how do deal
- * with end of lines, etc. It returns TRUE if all of the characters were
- * deleted, and FALSE if they were not (because dot ran into the end of the
- * buffer. The "kflag" is TRUE if the text should be put in the kill buffer.
+ * with end of lines, etc. It returns true if all of the characters were
+ * deleted, and false if they were not (because dot ran into the end of the
+ * buffer. The "kflag" is true if the text should be put in the kill buffer.
  *
  * long n;		# of chars to delete
  * int kflag;		 put killed text in kill buffer flag
@@ -389,7 +389,7 @@ int ldelete(long n, int kflag) {
     dotp = curwp->w_dotp;
     doto = curwp->w_doto;
     if (dotp == curbp->b_linep) /* Hit end of buffer.       */
-      return FALSE;
+      return false;
     chunk = dotp->l_used - doto; /* Size of chunk.       */
     if (chunk > n)
       chunk = n;
@@ -399,18 +399,18 @@ int ldelete(long n, int kflag) {
 #else
       lchange(WFHARD);
 #endif
-      if (ldelnewline() == FALSE || (kflag != FALSE && kinsert('\n') == FALSE))
-        return FALSE;
+      if (ldelnewline() == false || (kflag != false && kinsert('\n') == false))
+        return false;
       --n;
       continue;
     }
     lchange(WFEDIT);
     cp1 = &dotp->l_text[doto]; /* Scrunch text.        */
     cp2 = cp1 + chunk;
-    if (kflag != FALSE) { /* Kill?                */
+    if (kflag != false) { /* Kill?                */
       while (cp1 != cp2) {
-        if (kinsert(*cp1) == FALSE)
-          return FALSE;
+        if (kinsert(*cp1) == false)
+          return false;
         ++cp1;
       }
       cp1 = &dotp->l_text[doto];
@@ -434,7 +434,7 @@ int ldelete(long n, int kflag) {
     }
     n -= chunk;
   }
-  return TRUE;
+  return true;
 }
 
 /*
@@ -474,24 +474,24 @@ int putctext(char *iline) {
 
   /* delete the current line */
   curwp->w_doto = 0; /* starting at the beginning of the line */
-  if ((status = killtext(TRUE, 1)) != TRUE)
+  if ((status = killtext(true, 1)) != true)
     return status;
 
   /* insert the new line */
-  if ((status = linstr(iline)) != TRUE)
+  if ((status = linstr(iline)) != true)
     return status;
   status = lnewline();
-  backline(TRUE, 1);
+  backline(true, 1);
   return status;
 }
 
 /*
  * Delete a newline. Join the current line with the next line. If the next line
- * is the magic header line always return TRUE; merging the last line with the
+ * is the magic header line always return true; merging the last line with the
  * header line can be thought of as always being a successful operation, even
  * if nothing is done, and this makes the kill buffer work "right". Easy cases
  * can be done by shuffling data around. Hard cases require that lines be moved
- * about in memory. Return FALSE on error and TRUE if all looks ok. Called by
+ * about in memory. Return false on error and true if all looks ok. Called by
  * "ldelete" only.
  */
 int ldelnewline(void) {
@@ -509,7 +509,7 @@ int ldelnewline(void) {
   if (lp2 == curbp->b_linep) { /* At the buffer end.   */
     if (lp1->l_used == 0)      /* Blank line.              */
       lfree(lp1);
-    return TRUE;
+    return true;
   }
   if (lp2->l_used <= lp1->l_size - lp1->l_used) {
     cp1 = &lp1->l_text[lp1->l_used];
@@ -534,10 +534,10 @@ int ldelnewline(void) {
     lp1->l_fp = lp2->l_fp;
     lp2->l_fp->l_bp = lp1;
     free((char *)lp2);
-    return TRUE;
+    return true;
   }
   if ((lp3 = lalloc(lp1->l_used + lp2->l_used)) == NULL)
-    return FALSE;
+    return false;
   cp1 = &lp1->l_text[0];
   cp2 = &lp3->l_text[0];
   while (cp1 != &lp1->l_text[lp1->l_used])
@@ -569,7 +569,7 @@ int ldelnewline(void) {
   }
   free((char *)lp1);
   free((char *)lp2);
-  return TRUE;
+  return true;
 }
 
 /*
@@ -598,7 +598,7 @@ void kdelete(void) {
 
 /*
  * Insert a character to the kill buffer, allocating new chunks as needed.
- * Return TRUE if all is well, and FALSE on errors.
+ * Return true if all is well, and false on errors.
  *
  * int c;			character to insert in the kill buffer
  */
@@ -608,7 +608,7 @@ int kinsert(int c) {
   /* check to see if we need a new chunk */
   if (kused >= KBLOCK) {
     if ((nchunk = (struct kill *)malloc(sizeof(struct kill))) == NULL)
-      return FALSE;
+      return false;
     if (kbufh == NULL) /* set head ptr if first time */
       kbufh = nchunk;
     if (kbufp != NULL) /* point the current to this new one */
@@ -620,7 +620,7 @@ int kinsert(int c) {
 
   /* and now insert the character */
   kbufp->d_chunk[kused++] = c;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -637,10 +637,10 @@ int yank(int f, int n) {
   if (curbp->b_mode & MDVIEW) /* don't allow this command if      */
     return rdonly();          /* we are in read only mode     */
   if (n < 0)
-    return FALSE;
+    return false;
   /* make sure there is something to yank */
   if (kbufh == NULL)
-    return TRUE; /* not an error, just nothing */
+    return true; /* not an error, just nothing */
 
   /* for each time.... */
   while (n--) {
@@ -653,15 +653,15 @@ int yank(int f, int n) {
       sp = kp->d_chunk;
       while (i--) {
         if ((c = *sp++) == '\n') {
-          if (lnewline() == FALSE)
-            return FALSE;
+          if (lnewline() == false)
+            return false;
         } else {
-          if (linsert_byte(1, c) == FALSE)
-            return FALSE;
+          if (linsert_byte(1, c) == false)
+            return false;
         }
       }
       kp = kp->d_next;
     }
   }
-  return TRUE;
+  return true;
 }

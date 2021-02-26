@@ -43,7 +43,7 @@ static struct video **vscreen; /* Virtual screen. */
 static struct video **pscreen; /* Physical screen. */
 #endif
 
-static int displaying = TRUE;
+static int displaying = true;
 #if UNIX
 #include <signal.h>
 #endif
@@ -85,7 +85,7 @@ void vtinit(void) {
 
   TTopen();  /* open the screen */
   TTkopen(); /* open the keyboard */
-  TTrev(FALSE);
+  TTrev(false);
   vscreen = xmalloc(term.t_mrow * sizeof(struct video *));
 
 #if MEMMAP == 0 || SCROLLCODE
@@ -230,8 +230,8 @@ static void vteeol(void) {
  *	always finishes complete update
  */
 int upscreen(int f, int n) {
-  update(TRUE);
-  return TRUE;
+  update(true);
+  return true;
 }
 
 #if SCROLLCODE
@@ -251,15 +251,15 @@ int update(int force) {
   struct window *wp;
 
 #if TYPEAH && !PKCODE
-  if (force == FALSE && typahead())
-    return TRUE;
+  if (force == false && typahead())
+    return true;
 #endif
 #if VISMAC == 0
-  if (force == FALSE && kbdmode == PLAY)
-    return TRUE;
+  if (force == false && kbdmode == PLAY)
+    return true;
 #endif
 
-  displaying = TRUE;
+  displaying = true;
 
 #if SCROLLCODE
 
@@ -325,7 +325,7 @@ int update(int force) {
   upddex();
 
   /* if screen is garbage, re-plot it */
-  if (sgarbf != FALSE)
+  if (sgarbf != false)
     updgar();
 
   /* update the virtual screen to the physical screen */
@@ -334,12 +334,12 @@ int update(int force) {
   /* update the cursor and flush the buffers */
   movecursor(currow, curcol - lbound);
   TTflush();
-  displaying = FALSE;
+  displaying = false;
 #if SIGWINCH
   while (chg_width || chg_height)
     newscreensize(chg_height, chg_width);
 #endif
-  return TRUE;
+  return true;
 }
 
 /*
@@ -381,7 +381,7 @@ static int reframe(struct window *wp) {
           break;
         }
 #endif
-        return TRUE;
+        return true;
       }
 
       /* if we are at the end of the file, reframe */
@@ -427,7 +427,7 @@ static int reframe(struct window *wp) {
   wp->w_linep = lp;
   wp->w_flag |= WFHARD;
   wp->w_flag &= ~WFFORCE;
-  return TRUE;
+  return true;
 }
 
 static void show_line(struct line *lp) {
@@ -607,8 +607,8 @@ void updgar(void) {
 
   movecursor(0, 0); /* Erase the screen. */
   (*term.t_eeop)();
-  sgarbf = FALSE; /* Erase-page clears */
-  mpresf = FALSE; /* the message area. */
+  sgarbf = false; /* Erase-page clears */
+  mpresf = false; /* the message area. */
 #if COLOR
   mlerase(); /* needs to be cleared if colored */
 #endif
@@ -626,9 +626,9 @@ int updupd(int force) {
 
 #if SCROLLCODE
   if (scrflags & WFKILLS)
-    scrolls(FALSE);
+    scrolls(false);
   if (scrflags & WFINS)
-    scrolls(TRUE);
+    scrolls(true);
   scrflags = 0;
 #endif
 
@@ -638,8 +638,8 @@ int updupd(int force) {
     /* for each line that needs to be updated */
     if ((vp1->v_flag & VFCHG) != 0) {
 #if TYPEAH && !PKCODE
-      if (force == FALSE && typahead())
-        return TRUE;
+      if (force == false && typahead())
+        return true;
 #endif
 #if MEMMAP && !SCROLLCODE
       updateline(i, vp1);
@@ -648,7 +648,7 @@ int updupd(int force) {
 #endif
     }
   }
-  return TRUE;
+  return true;
 }
 
 #if SCROLLCODE
@@ -667,7 +667,7 @@ static int scrolls(int inserts) { /* returns true if it does something */
   int from, to;
 
   if (!term.t_scroll) /* no way to scroll */
-    return FALSE;
+    return false;
 
   rows = term.t_nrow;
   cols = term.t_ncol;
@@ -681,7 +681,7 @@ static int scrolls(int inserts) { /* returns true if it does something */
   }
 
   if (first < 0)
-    return FALSE; /* no text changes */
+    return false; /* no text changes */
 
   vpv = vscreen[first];
   vpp = pscreen[first];
@@ -743,7 +743,7 @@ static int scrolls(int inserts) { /* returns true if it does something */
       to = target;
     }
     if (2 * count < abs(from - to))
-      return FALSE;
+      return false;
     scrscroll(from, to, count);
     for (i = 0; i < count; i++) {
       vpp = pscreen[to + i];
@@ -774,9 +774,9 @@ static int scrolls(int inserts) { /* returns true if it does something */
       vscreen[i]->v_flag |= VFCHG;
     }
 #endif
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 /* move the "count" lines starting at "from" to "to" */
@@ -786,7 +786,7 @@ static void scrscroll(int from, int to, int count) {
 }
 
 /*
- * return TRUE on text match
+ * return true on text match
  *
  * int vrow, prow;		virtual, physical rows
  */
@@ -953,7 +953,7 @@ static int updateline(int row, struct video *vp1, struct video *vp2) {
     }
     /* turn rev video off */
     if (rev != req)
-      (*term.t_rev)(FALSE);
+      (*term.t_rev)(false);
 
     /* update the needed flags */
     vp1->v_flag &= ~VFCHG;
@@ -965,7 +965,7 @@ static int updateline(int row, struct video *vp1, struct video *vp2) {
     vp1->v_fcolor = vp1->v_rfcolor;
     vp1->v_bcolor = vp1->v_rbcolor;
 #endif
-    return TRUE;
+    return true;
   }
 #endif
 
@@ -984,11 +984,11 @@ static int updateline(int row, struct video *vp1, struct video *vp2) {
   /* if both lines are the same, no update needs to be done */
   if (cp1 == &vp1->v_text[term.t_ncol]) {
     vp1->v_flag &= ~VFCHG; /* flag this line is changed */
-    return TRUE;
+    return true;
   }
 
   /* find out if there is a match on the right */
-  nbflag = FALSE;
+  nbflag = false;
   cp3 = &vp1->v_text[term.t_ncol];
   cp4 = &vp2->v_text[term.t_ncol];
 
@@ -996,13 +996,13 @@ static int updateline(int row, struct video *vp1, struct video *vp2) {
     --cp3;
     --cp4;
     if (cp3[0] != ' ') /* Note if any nonblank */
-      nbflag = TRUE;   /* in right match. */
+      nbflag = true;   /* in right match. */
   }
 
   cp5 = cp3;
 
   /* Erase to EOL ? */
-  if (nbflag == FALSE && eolexist == TRUE && (req != TRUE)) {
+  if (nbflag == false && eolexist == true && (req != true)) {
     while (cp5 != cp1 && cp5[-1] == ' ')
       --cp5;
 
@@ -1027,10 +1027,10 @@ static int updateline(int row, struct video *vp1, struct video *vp2) {
       *cp2++ = *cp1++;
   }
 #if REVSTA
-  TTrev(FALSE);
+  TTrev(false);
 #endif
   vp1->v_flag &= ~VFCHG; /* flag this line as updated */
-  return TRUE;
+  return true;
 #endif
 }
 #endif
@@ -1108,16 +1108,16 @@ static void modeline(struct window *wp) {
 
   /* display the modes */
 
-  firstm = TRUE;
+  firstm = true;
   if ((bp->b_flag & BFTRUNC) != 0) {
-    firstm = FALSE;
+    firstm = false;
     strcat(tline, "Truncated");
   }
   for (i = 0; i < NUMMODES; i++) /* add in the mode flags */
     if (wp->w_bufp->b_mode & (1 << i)) {
-      if (firstm != TRUE)
+      if (firstm != true)
         strcat(tline, " ");
-      firstm = FALSE;
+      firstm = false;
       strcat(tline, mode2name[i]);
     }
   strcat(tline, ") ");
@@ -1249,14 +1249,14 @@ void mlerase(void) {
   int i;
 
   movecursor(term.t_nrow, 0);
-  if (discmd == FALSE)
+  if (discmd == false)
     return;
 
 #if COLOR
   TTforg(7);
   TTbacg(0);
 #endif
-  if (eolexist == TRUE)
+  if (eolexist == true)
     TTeeol();
   else {
     for (i = 0; i < term.t_ncol - 1; i++)
@@ -1265,14 +1265,14 @@ void mlerase(void) {
     movecursor(term.t_nrow, 0);
   }
   TTflush();
-  mpresf = FALSE;
+  mpresf = false;
 }
 
 /*
  * Write a message into the message line. Keep track of the physical cursor
  * position. A small class of printf like format items is handled. Assumes the
  * stack grows down; this assumption is made by the "++" in the argument scan
- * loop. Set the "message line" flag TRUE.
+ * loop. Set the "message line" flag true.
  *
  * char *fmt;		format string for output
  * char *arg;		pointer to first argument to print
@@ -1282,7 +1282,7 @@ void mlwrite(const char *fmt, ...) {
   va_list ap;
 
   /* if we are not currently echoing on the command line, abort this */
-  if (discmd == FALSE) {
+  if (discmd == false) {
     movecursor(term.t_nrow, 0);
     return;
   }
@@ -1293,7 +1293,7 @@ void mlwrite(const char *fmt, ...) {
 #endif
 
   /* if we can not erase to end-of-line, do it manually */
-  if (eolexist == FALSE) {
+  if (eolexist == false) {
     mlerase();
     TTflush();
   }
@@ -1340,15 +1340,15 @@ void mlwrite(const char *fmt, ...) {
   va_end(ap);
 
   /* if we can, erase to the end of screen */
-  if (eolexist == TRUE)
+  if (eolexist == true)
     TTeeol();
   TTflush();
-  mpresf = TRUE;
+  mpresf = true;
 }
 
 /*
  * Force a string out to the message line regardless of the
- * current $discmd setting. This is needed when $debug is TRUE
+ * current $discmd setting. This is needed when $debug is true
  * and for the write-message and clear-message-line commands
  *
  * char *s;		string to force out
@@ -1357,7 +1357,7 @@ void mlforce(char *s) {
   int oldcmd; /* original command display flag */
 
   oldcmd = discmd; /* save the discmd value */
-  discmd = TRUE;   /* and turn display on */
+  discmd = true;   /* and turn display on */
   mlwrite(s);      /* write the string out */
   discmd = oldcmd; /* and restore the original setting */
 }
@@ -1489,16 +1489,16 @@ static int newscreensize(int h, int w) {
   if (displaying) {
     chg_width = w;
     chg_height = h;
-    return FALSE;
+    return false;
   }
   chg_width = chg_height = 0;
   if (h - 1 < term.t_mrow)
-    newsize(TRUE, h);
+    newsize(true, h);
   if (w < term.t_mcol)
-    newwidth(TRUE, w);
+    newwidth(true, w);
 
-  update(TRUE);
-  return TRUE;
+  update(true);
+  return true;
 }
 
 #endif

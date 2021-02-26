@@ -40,7 +40,7 @@ set $sres "CGA"
 ;	f1  f2  f3  f4  f5  f6  f7  f8  f9  f10
 ;	FN; FN< FN= FN> FN? FN@ FNA FNB FNC FND
 
-bind-to-key help			FN;	
+bind-to-key help			FN;
 bind-to-key exit-emacs			FND
 
 ;	Function keys (shifted)
@@ -48,7 +48,7 @@ bind-to-key exit-emacs			FND
 ;	FNT FNU FNV FNW FNX FNY FNZ FN[ FN\ FN]
 
 ;	Other special keys (unshifted)
-;	Home End  Ins  Del  PgUp PgDn  
+;	Home End  Ins  Del  PgUp PgDn
 ;	FNG  FNO  FNR  FNS  FNI  FNQ
 
 ;       Some common Alt-keys
@@ -105,7 +105,7 @@ bind-to-key next-window			FN^X
 		!endif
 		execute-macro-39
 	!else
-		set %hlpcode &lef $line 2 
+		set %hlpcode &lef $line 2
 		!if &seq %hlpcode ".."
 			set %hlptopic &mid $line 4 99
 			end-of-line
@@ -211,7 +211,7 @@ bind-to-key execute-macro-40 M-?
 	!endif
 
 !endm
-	
+
 bind-to-key execute-macro-36	M-FNR
 
 ;	Setup for ASCII {|}[\] to ISO Latin-1 translation

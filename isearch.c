@@ -17,7 +17,7 @@
  *	- Put isearch constants into estruct.h
  *	- Eliminated the passing of 'status' to scanmore() and
  *	  checknext(), since there were no circumstances where
- *	  it ever equalled FALSE.
+ *	  it ever equalled false.
  *
  *	Modified by Petri Kutvonen
  */
@@ -59,14 +59,14 @@ int risearch(int f, int n) {
 
   /* Make sure the search doesn't match where we already are:               */
 
-  backchar(TRUE, 1); /* Back up a character                */
+  backchar(true, 1); /* Back up a character                */
 
   if (!(isearch(f, -n))) {
     /* Call ISearch backwards       */ /* If error in search:                */
     curwp->w_dotp = curline;           /* Reset the line pointer             */
     curwp->w_doto = curoff;            /*  and the offset to original value  */
     curwp->w_flag |= WFMOVE;           /* Say we've moved                    */
-    update(FALSE);                     /* And force an update                */
+    update(false);                     /* And force an update                */
     mlwrite("(search failed)");        /* Say we died                        */
 #if PKCODE
     matchlen = strlen(pat);
@@ -76,7 +76,7 @@ int risearch(int f, int n) {
 #if PKCODE
   matchlen = strlen(pat);
 #endif
-  return TRUE;
+  return true;
 }
 
 /*
@@ -98,7 +98,7 @@ int fisearch(int f, int n) {
     curwp->w_dotp = curline;           /* Reset the line pointer             */
     curwp->w_doto = curoff;            /*  and the offset to original value  */
     curwp->w_flag |= WFMOVE;           /* Say we've moved                    */
-    update(FALSE);                     /* And force an update                */
+    update(false);                     /* And force an update                */
     mlwrite("(search failed)");        /* Say we died                        */
 #if PKCODE
     matchlen = strlen(pat);
@@ -108,7 +108,7 @@ int fisearch(int f, int n) {
 #if PKCODE
   matchlen = strlen(pat);
 #endif
-  return TRUE;
+  return true;
 }
 
 /*
@@ -166,7 +166,7 @@ start_over:
   col = promptpattern("ISearch: "); /* Prompt, remember the col   */
 
   cpos = 0;      /* Start afresh               */
-  status = TRUE; /* Assume everything's cool   */
+  status = true; /* Assume everything's cool   */
 
   /*
      Get the first character in the pattern.  If we get an initial Control-S
@@ -180,7 +180,7 @@ start_over:
       col = echo_char(pat[cpos], col);     /*  and re-echo the string    */
     if (c == IS_REVERSE) {                 /* forward search?            */
       n = -1;                              /* No, search in reverse      */
-      backchar(TRUE, 1);                   /* Be defensive about EOB     */
+      backchar(true, 1);                   /* Be defensive about EOB     */
     } else
       n = 1;                      /* Yes, search forward        */
     status = scanmore(pat, n);    /* Do the search              */
@@ -194,11 +194,11 @@ start_over:
     /* Most cases here change the search */
 
     if (expc == metac) /* Want to quit searching?    */
-      return TRUE;     /* Quit searching now         */
+      return true;     /* Quit searching now         */
 
     switch (c) {    /* dispatch on the input char */
     case IS_ABORT:  /* If abort search request    */
-      return FALSE; /* Quit searching again       */
+      return false; /* Quit searching again       */
 
     case IS_REVERSE:                /* If backward search         */
     case IS_FORWARD:                /* If forward search          */
@@ -226,7 +226,7 @@ start_over:
     case IS_BACKSP:                  /* If a backspace:            */
     case IS_RUBOUT:                  /*  or if a Rubout:           */
       if (cmd_offset <= 1)           /* Anything to delete?            */
-        return TRUE;                 /* No, just exit              */
+        return true;                 /* No, just exit              */
       --cmd_offset;                  /* Back up over the Rubout    */
       cmd_buff[--cmd_offset] = '\0'; /* Yes, delete last char   */
       curwp->w_dotp = curline;       /* Reset the line pointer     */
@@ -241,7 +241,7 @@ start_over:
     default: /* All other chars            */
       if (c < ' ') { /* Is it printable?             */ /* Nope. */
         reeat(c);    /* Re-eat the char            */
-        return TRUE; /* And return the last status */
+        return true; /* And return the last status */
       }
     } /* Switch */
 
@@ -251,7 +251,7 @@ start_over:
     if (cpos >=
         NPAT) { /* too many chars in string?  */ /* Yup.  Complain about it */
       mlwrite("? Search string too long");
-      return TRUE; /* Return an error            */
+      return true; /* Return an error            */
     }
     pat[cpos] = 0;           /* null terminate the buffer  */
     col = echo_char(c, col); /* Echo the character         */
@@ -273,7 +273,7 @@ start_over:
  * implicitly move the "point" if we're forward searching, and find a match,
  * since that's the way forward isearch works.
  *
- * If the compare fails, we return FALSE and assume the caller will call
+ * If the compare fails, we return false and assume the caller will call
  * scanmore or something.
  *
  * char chr;		Next char to look for
@@ -297,7 +297,7 @@ int checknext(char chr, char *patrn,
     if (curoff == llength(curline)) { /* If at end of line                    */
       curline = lforw(curline);       /* Skip to the next line              */
       if (curline == curbp->b_linep)
-        return FALSE;  /* Abort if at end of buffer          */
+        return false;  /* Abort if at end of buffer          */
       curoff = 0;      /* Start at the beginning of the line */
       buffchar = '\n'; /* And say the next char is NL        */
     } else
@@ -346,7 +346,7 @@ int scanmore(char *patrn, int dir) /* search forward or back for a pattern */
 /*
  * The following is a worker subroutine used by the reverse search.  It
  * compares the pattern string with the characters at "." for equality. If
- * any characters mismatch, it will return FALSE.
+ * any characters mismatch, it will return false.
  *
  * This isn't used for forward searches, because forward searches leave "."
  * at the end of the search string (instead of in front), so all that needs to
@@ -374,14 +374,14 @@ int match_pat(
       curline = lforw(curline);       /* Skip to the next line              */
       curoff = 0;                     /* Start at the beginning of the line */
       if (curline == curbp->b_linep)
-        return FALSE;  /* Abort if at end of buffer          */
+        return false;  /* Abort if at end of buffer          */
       buffchar = '\n'; /* And say the next char is NL        */
     } else
       buffchar = lgetc(curline, curoff++); /* Get the next char         */
     if (!eq(buffchar, patrn[i])) /* Is it what we're looking for?      */
-      return FALSE;              /* Nope, just punt it then            */
+      return false;              /* Nope, just punt it then            */
   }
-  return TRUE; /* Everything matched? Let's celebrate */
+  return true; /* Everything matched? Let's celebrate */
 }
 
 /*
@@ -464,7 +464,7 @@ int get_char(void) {
   /* We're not re-executing (or aren't any more).  Try for a real char      */
 
   cmd_reexecute = -1;                /* Say we're in real mode again       */
-  update(FALSE);                     /* Pretty up the screen               */
+  update(false);                     /* Pretty up the screen               */
   if (cmd_offset >= CMDBUFLEN - 1) { /* If we're getting too big ...         */
     mlwrite("? command too long");   /* Complain loudly and bitterly       */
     return metac;                    /* And force a quit                   */

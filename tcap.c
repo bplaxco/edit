@@ -164,10 +164,10 @@ static void tcapopen(void) {
     SE = tgetstr("se", &p);
     SO = tgetstr("so", &p);
     if (SO != NULL)
-      revexist = TRUE;
+      revexist = true;
 #if PKCODE
     if (tgetnum("sg") > 0) { /* can reverse be used? P.K. */
-      revexist = FALSE;
+      revexist = false;
       SE = NULL;
       SO = NULL;
     }
@@ -181,7 +181,7 @@ static void tcapopen(void) {
     }
 
     if (CE == NULL) /* will we be able to use clear to EOL? */
-      eolexist = FALSE;
+      eolexist = false;
 #if SCROLLCODE
     CS = tgetstr("cs", &p);
     SF = tgetstr("sf", &p);
@@ -226,7 +226,7 @@ static void tcapkopen(void) {
   ttflush();
   ttrow = 999;
   ttcol = 999;
-  sgarbf = TRUE;
+  sgarbf = true;
 #endif
   strcpy(sres, "NORMAL");
 }
@@ -247,7 +247,7 @@ static void tcapeeop(void) { putpad(CL); }
 /*
  * Change reverse video status
  *
- * @state: FALSE = normal video, TRUE = reverse video.
+ * @state: false = normal video, true = reverse video.
  */
 static void tcaprev(int state) {
   if (state) {
@@ -258,7 +258,7 @@ static void tcaprev(int state) {
 }
 
 /* Change screen resolution. */
-static int tcapcres(char *res) { return TRUE; }
+static int tcapcres(char *res) { return true; }
 
 #if SCROLLCODE
 

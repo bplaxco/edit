@@ -56,13 +56,13 @@ int spawncli(int f, int n) {
   movecursor(term.t_nrow, 0); /* In last line.        */
   mlputs("(Starting DCL)\r\n");
   TTflush(); /* Ignore "ttcol".      */
-  sgarbf = TRUE;
+  sgarbf = true;
   sys(NULL);
   sleep(1);
   mlputs("\r\n(Returning from DCL)\r\n");
   TTflush();
   sleep(1);
-  return TRUE;
+  return true;
 #endif
 #if MSDOS & (MSC | TURBO)
   movecursor(term.t_nrow, 0); /* Seek to last line.   */
@@ -70,8 +70,8 @@ int spawncli(int f, int n) {
   TTkclose();
   shellprog("");
   TTkopen();
-  sgarbf = TRUE;
-  return TRUE;
+  sgarbf = true;
+  return true;
 #endif
 #if V7 | USG | BSD
   movecursor(term.t_nrow, 0); /* Seek to last line.   */
@@ -86,7 +86,7 @@ int spawncli(int f, int n) {
 #else
     system("exec /bin/sh");
 #endif
-  sgarbf = TRUE;
+  sgarbf = true;
   sleep(2);
   TTopen();
   TTkopen();
@@ -100,7 +100,7 @@ int spawncli(int f, int n) {
   chg_height = term.t_nrow + 1;
   term.t_nrow = term.t_ncol = 0;
 #endif
-  return TRUE;
+  return true;
 #endif
 }
 
@@ -115,13 +115,13 @@ int bktoshell(int f, int n) { /* suspend MicroEMACS and wait to wake up */
           kill(pid,SIGTSTP);
   ******************************/
   kill(0, SIGTSTP);
-  return TRUE;
+  return true;
 }
 
 void rtfrmshell(void) {
   TTopen();
   curwp->w_flag = WFHARD;
-  sgarbf = TRUE;
+  sgarbf = true;
 }
 #endif
 
@@ -139,36 +139,36 @@ int spawn(int f, int n) {
     return resterr();
 
 #if VMS
-  if ((s = mlreply("!", line, NLINE)) != TRUE)
+  if ((s = mlreply("!", line, NLINE)) != true)
     return s;
   movecursor(term.t_nrow, 0);
   TTflush();
   s = sys(line); /* Run the command.     */
-  if (clexec == FALSE) {
+  if (clexec == false) {
     mlputs("\r\n\n(End)"); /* Pause.               */
     TTflush();
     tgetc();
   }
-  sgarbf = TRUE;
+  sgarbf = true;
   return s;
 #endif
 #if MSDOS
-  if ((s = mlreply("!", line, NLINE)) != TRUE)
+  if ((s = mlreply("!", line, NLINE)) != true)
     return s;
   movecursor(term.t_nrow, 0);
   TTkclose();
   shellprog(line);
   TTkopen();
   /* if we are interactive, pause here */
-  if (clexec == FALSE) {
+  if (clexec == false) {
     mlputs("\r\n(End)");
     tgetc();
   }
-  sgarbf = TRUE;
-  return TRUE;
+  sgarbf = true;
+  return true;
 #endif
 #if V7 | USG | BSD
-  if ((s = mlreply("!", line, NLINE)) != TRUE)
+  if ((s = mlreply("!", line, NLINE)) != true)
     return s;
   TTflush();
   TTclose(); /* stty to old modes    */
@@ -177,7 +177,7 @@ int spawn(int f, int n) {
   fflush(stdout); /* to be sure P.K.      */
   TTopen();
 
-  if (clexec == FALSE) {
+  if (clexec == false) {
     mlputs("(End)"); /* Pause.               */
     TTflush();
     while ((s = tgetc()) != '\r' && s != ' ')
@@ -185,8 +185,8 @@ int spawn(int f, int n) {
     mlputs("\r\n");
   }
   TTkopen();
-  sgarbf = TRUE;
-  return TRUE;
+  sgarbf = true;
+  return true;
 #endif
 }
 
@@ -205,35 +205,35 @@ int execprg(int f, int n) {
     return resterr();
 
 #if VMS
-  if ((s = mlreply("!", line, NLINE)) != TRUE)
+  if ((s = mlreply("!", line, NLINE)) != true)
     return s;
   TTflush();
   s = sys(line);         /* Run the command.     */
   mlputs("\r\n\n(End)"); /* Pause.               */
   TTflush();
   tgetc();
-  sgarbf = TRUE;
+  sgarbf = true;
   return s;
 #endif
 
 #if MSDOS
-  if ((s = mlreply("$", line, NLINE)) != TRUE)
+  if ((s = mlreply("$", line, NLINE)) != true)
     return s;
   movecursor(term.t_nrow, 0);
   TTkclose();
   execprog(line);
   TTkopen();
   /* if we are interactive, pause here */
-  if (clexec == FALSE) {
+  if (clexec == false) {
     mlputs("\r\n(End)");
     tgetc();
   }
-  sgarbf = TRUE;
-  return TRUE;
+  sgarbf = true;
+  return true;
 #endif
 
 #if V7 | USG | BSD
-  if ((s = mlreply("!", line, NLINE)) != TRUE)
+  if ((s = mlreply("!", line, NLINE)) != true)
     return s;
   TTputc('\n'); /* Already have '\r'    */
   TTflush();
@@ -246,8 +246,8 @@ int execprg(int f, int n) {
   TTflush();
   while ((s = tgetc()) != '\r' && s != ' ')
     ;
-  sgarbf = TRUE;
-  return TRUE;
+  sgarbf = true;
+  return true;
 #endif
 }
 
@@ -288,35 +288,35 @@ int pipecmd(int f, int n) {
 
 #if VMS
   mlwrite("Not available under VMS");
-  return FALSE;
+  return false;
 #endif
 
   /* get the command to pipe in */
-  if ((s = mlreply("@", line, NLINE)) != TRUE)
+  if ((s = mlreply("@", line, NLINE)) != true)
     return s;
 
   /* get rid of the command output buffer if it exists */
-  if ((bp = bfind(bname, FALSE, 0)) != FALSE) {
+  if ((bp = bfind(bname, false, 0)) != false) {
     /* try to make sure we are off screen */
     wp = wheadp;
     while (wp != NULL) {
       if (wp->w_bufp == bp) {
 #if PKCODE
         if (wp == curwp)
-          delwind(FALSE, 1);
+          delwind(false, 1);
         else
-          onlywind(FALSE, 1);
+          onlywind(false, 1);
         break;
 #else
-        onlywind(FALSE, 1);
+        onlywind(false, 1);
         break;
 #endif
       }
       wp = wp->w_wndp;
     }
-    if (zotbuf(bp) != TRUE)
+    if (zotbuf(bp) != true)
 
-      return FALSE;
+      return false;
   }
 #if MSDOS
   strcat(line, " >>");
@@ -325,12 +325,12 @@ int pipecmd(int f, int n) {
   TTkclose();
   shellprog(line);
   TTkopen();
-  sgarbf = TRUE;
+  sgarbf = true;
   if ((fp = fopen(filnam, "r")) == NULL) {
-    s = FALSE;
+    s = false;
   } else {
     fclose(fp);
-    s = TRUE;
+    s = true;
   }
 #endif
 
@@ -344,20 +344,20 @@ int pipecmd(int f, int n) {
   TTopen();
   TTkopen();
   TTflush();
-  sgarbf = TRUE;
-  s = TRUE;
+  sgarbf = true;
+  s = true;
 #endif
 
-  if (s != TRUE)
+  if (s != true)
     return s;
 
   /* split the current window to make room for the command output */
-  if (splitwind(FALSE, 1) == FALSE)
-    return FALSE;
+  if (splitwind(false, 1) == false)
+    return false;
 
   /* and read the stuff in */
-  if (getfile(filnam, FALSE) == FALSE)
-    return FALSE;
+  if (getfile(filnam, false) == false)
+    return false;
 
   /* make this window in VIEW mode, update all mode lines */
   curwp->w_bufp->b_mode |= MDVIEW;
@@ -369,7 +369,7 @@ int pipecmd(int f, int n) {
 
   /* and get rid of the temporary file */
   unlink(filnam);
-  return TRUE;
+  return true;
 }
 
 /*
@@ -395,11 +395,11 @@ int filter_buffer(int f, int n) {
 
 #if VMS
   mlwrite("Not available under VMS");
-  return FALSE;
+  return false;
 #endif
 
   /* get the filter name and its args */
-  if ((s = mlreply("#", line, NLINE)) != TRUE)
+  if ((s = mlreply("#", line, NLINE)) != true)
     return s;
 
   /* setup the proper file names */
@@ -408,10 +408,10 @@ int filter_buffer(int f, int n) {
   strcpy(bp->b_fname, bname1); /* set it to our new one */
 
   /* write it out, checking for errors */
-  if (writeout(filnam1) != TRUE) {
+  if (writeout(filnam1) != true) {
     mlwrite("(Cannot write filter file)");
     strcpy(bp->b_fname, tmpnam);
-    return FALSE;
+    return false;
   }
 #if MSDOS
   strcat(line, " <fltinp >fltout");
@@ -419,8 +419,8 @@ int filter_buffer(int f, int n) {
   TTkclose();
   shellprog(line);
   TTkopen();
-  sgarbf = TRUE;
-  s = TRUE;
+  sgarbf = true;
+  s = true;
 #endif
 
 #if V7 | USG | BSD
@@ -433,12 +433,12 @@ int filter_buffer(int f, int n) {
   TTopen();
   TTkopen();
   TTflush();
-  sgarbf = TRUE;
-  s = TRUE;
+  sgarbf = true;
+  s = true;
 #endif
 
   /* on failure, escape gracefully */
-  if (s != TRUE || (readin(filnam2, FALSE) == FALSE)) {
+  if (s != true || (readin(filnam2, false) == false)) {
     mlwrite("(Execution failed)");
     strcpy(bp->b_fname, tmpnam);
     unlink(filnam1);
@@ -453,7 +453,7 @@ int filter_buffer(int f, int n) {
   /* and get rid of the temporary file */
   unlink(filnam1);
   unlink(filnam2);
-  return TRUE;
+  return true;
 }
 
 #if VMS
@@ -473,7 +473,7 @@ int sys(char *cmd) {
   status = SYS$QIOW(EFN, iochan, IO$_SETMODE, iosb, 0, 0, oldmode,
                     sizeof(oldmode), 0, 0, 0, 0);
   if (status != SS$_NORMAL || (iosb[0] & 0xFFFF) != SS$_NORMAL)
-    return FALSE;
+    return false;
   cdscp = NULL;      /* Assume DCL.          */
   if (cmd != NULL) { /* Build descriptor.    */
     cdsc.dsc$a_pointer = cmd;
@@ -488,10 +488,10 @@ int sys(char *cmd) {
   status = SYS$QIOW(EFN, iochan, IO$_SETMODE, iosb, 0, 0, newmode,
                     sizeof(newmode), 0, 0, 0, 0);
   if (status != SS$_NORMAL || (iosb[0] & 0xFFFF) != SS$_NORMAL)
-    return FALSE;
+    return false;
   if ((substatus & STS$M_SUCCESS) == 0) /* Command failed.      */
-    return FALSE;
-  return TRUE;
+    return false;
+  return true;
 }
 #endif
 
@@ -517,7 +517,7 @@ int shellprog(char *cmd) {
 
   /*  get name of system shell  */
   if ((shell = getenv("COMSPEC")) == NULL) {
-    return FALSE; /*  No shell located  */
+    return false; /*  No shell located  */
   }
 
   /* trim leading whitespace off the command */
@@ -577,11 +577,11 @@ int execprog(char *cmd) {
   strcat(&tail[1], "\r");
 
   /* look up the program on the path trying various extentions */
-  if ((sp = flook(prog, TRUE)) == NULL)
-    if ((sp = flook(strcat(prog, ".exe"), TRUE)) == NULL) {
+  if ((sp = flook(prog, true)) == NULL)
+    if ((sp = flook(strcat(prog, ".exe"), true)) == NULL) {
       strcpy(&prog[strlen(prog) - 4], ".com");
-      if ((sp = flook(prog, TRUE)) == NULL)
-        return FALSE;
+      if ((sp = flook(prog, true)) == NULL)
+        return false;
     }
   strcpy(prog, sp);
 
@@ -614,6 +614,6 @@ int execprog(char *cmd) {
     rval = -_doserrno; /* failed child call */
 #endif
 #endif
-  return (rval < 0) ? FALSE : TRUE;
+  return (rval < 0) ? false : true;
 }
 #endif

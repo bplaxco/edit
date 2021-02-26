@@ -78,7 +78,7 @@ void ttopen(void) {
   setbuffer(stdout, &tobuf[0], TBUFSIZ);
 
   kbdflgs = fcntl(0, F_GETFL, 0);
-  kbdpoll = FALSE;
+  kbdpoll = false;
 
   /* on all screens we are not sure of the initial position
      of the cursor                                        */

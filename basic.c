@@ -61,7 +61,7 @@ static int getgoal(struct line *dlp) {
  */
 int gotobol(int f, int n) {
   curwp->w_doto = 0;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -79,7 +79,7 @@ int backchar(int f, int n) {
   while (n--) {
     if (curwp->w_doto == 0) {
       if ((lp = lback(curwp->w_dotp)) == curbp->b_linep)
-        return FALSE;
+        return false;
       curwp->w_dotp = lp;
       curwp->w_doto = llength(lp);
       curwp->w_flag |= WFMOVE;
@@ -94,7 +94,7 @@ int backchar(int f, int n) {
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /*
@@ -102,7 +102,7 @@ int backchar(int f, int n) {
  */
 int gotoeol(int f, int n) {
   curwp->w_doto = llength(curwp->w_dotp);
-  return TRUE;
+  return true;
 }
 
 /*
@@ -119,7 +119,7 @@ int forwchar(int f, int n) {
     int len = llength(curwp->w_dotp);
     if (curwp->w_doto == len) {
       if (curwp->w_dotp == curbp->b_linep)
-        return FALSE;
+        return false;
       curwp->w_dotp = lforw(curwp->w_dotp);
       curwp->w_doto = 0;
       curwp->w_flag |= WFMOVE;
@@ -134,7 +134,7 @@ int forwchar(int f, int n) {
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /*
@@ -147,8 +147,8 @@ int gotoline(int f, int n) {
   char arg[NSTRING]; /* Buffer to hold argument. */
 
   /* Get an argument if one doesnt exist. */
-  if (f == FALSE) {
-    if ((status = mlreply("Line to GOTO: ", arg, NSTRING)) != TRUE) {
+  if (f == false) {
+    if ((status = mlreply("Line to GOTO: ", arg, NSTRING)) != true) {
       mlwrite("(Aborted)");
       return status;
     }
@@ -163,7 +163,7 @@ int gotoline(int f, int n) {
 
   /* If a bogus argument was passed, then returns false. */
   if (n < 0)
-    return FALSE;
+    return false;
 
   /* First, we go to the begin of the buffer. */
   gotobob(f, n);
@@ -179,7 +179,7 @@ int gotobob(int f, int n) {
   curwp->w_dotp = lforw(curbp->b_linep);
   curwp->w_doto = 0;
   curwp->w_flag |= WFHARD;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -191,7 +191,7 @@ int gotoeob(int f, int n) {
   curwp->w_dotp = curbp->b_linep;
   curwp->w_doto = 0;
   curwp->w_flag |= WFHARD;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -208,12 +208,12 @@ int forwline(int f, int n) {
 
   /* if we are on the last line as we start....fail the command */
   if (curwp->w_dotp == curbp->b_linep)
-    return FALSE;
+    return false;
 
   /* if the last command was not note a line move,
      reset the goal column */
   if ((lastflag & CFCPCN) == 0)
-    curgoal = getccol(FALSE);
+    curgoal = getccol(false);
 
   /* flag this command as a line move */
   thisflag |= CFCPCN;
@@ -227,7 +227,7 @@ int forwline(int f, int n) {
   curwp->w_dotp = dlp;
   curwp->w_doto = getgoal(dlp);
   curwp->w_flag |= WFMOVE;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -244,12 +244,12 @@ int backline(int f, int n) {
 
   /* if we are on the last line as we start....fail the command */
   if (lback(curwp->w_dotp) == curbp->b_linep)
-    return FALSE;
+    return false;
 
   /* if the last command was not note a line move,
      reset the goal column */
   if ((lastflag & CFCPCN) == 0)
-    curgoal = getccol(FALSE);
+    curgoal = getccol(false);
 
   /* flag this command as a line move */
   thisflag |= CFCPCN;
@@ -263,7 +263,7 @@ int backline(int f, int n) {
   curwp->w_dotp = dlp;
   curwp->w_doto = getgoal(dlp);
   curwp->w_flag |= WFMOVE;
-  return TRUE;
+  return true;
 }
 
 static int is_new_para(void) {
@@ -301,9 +301,9 @@ int gotobop(int f, int n) {
   while (n-- > 0) { /* for each one asked for */
 
     /* first scan back until we are in a word */
-    suc = backchar(FALSE, 1);
+    suc = backchar(false, 1);
     while (!inword() && suc)
-      suc = backchar(FALSE, 1);
+      suc = backchar(false, 1);
     curwp->w_doto = 0; /* and go to the B-O-Line */
 
     /* and scan back until we hit a <NL><NL> or <NL><TAB>
@@ -315,13 +315,13 @@ int gotobop(int f, int n) {
     }
 
     /* and then forward until we are in a word */
-    suc = forwchar(FALSE, 1);
+    suc = forwchar(false, 1);
     while (suc && !inword())
-      suc = forwchar(FALSE, 1);
+      suc = forwchar(false, 1);
   }
 
   curwp->w_flag |= WFMOVE; /* force screen update */
-  return TRUE;
+  return true;
 }
 
 /*
@@ -339,9 +339,9 @@ int gotoeop(int f, int n) {
 
   while (n-- > 0) { /* for each one asked for */
     /* first scan forward until we are in a word */
-    suc = forwchar(FALSE, 1);
+    suc = forwchar(false, 1);
     while (!inword() && suc)
-      suc = forwchar(FALSE, 1);
+      suc = forwchar(false, 1);
     curwp->w_doto = 0; /* and go to the B-O-Line */
     if (suc)           /* of next line if not at EOF */
       curwp->w_dotp = lforw(curwp->w_dotp);
@@ -355,16 +355,16 @@ int gotoeop(int f, int n) {
     }
 
     /* and then backward until we are in a word */
-    suc = backchar(FALSE, 1);
+    suc = backchar(false, 1);
     while (suc && !inword()) {
-      suc = backchar(FALSE, 1);
+      suc = backchar(false, 1);
     }
 
     curwp->w_doto = llength(curwp->w_dotp); /* and to the EOL */
   }
 
   curwp->w_flag |= WFMOVE; /* force screen update */
-  return TRUE;
+  return true;
 }
 
 /*
@@ -376,7 +376,7 @@ int gotoeop(int f, int n) {
 int forwpage(int f, int n) {
   struct line *lp;
 
-  if (f == FALSE) {
+  if (f == false) {
     if (term.t_scroll != NULL)
       if (overlap == 0)
         n = curwp->w_ntrows / 3 * 2;
@@ -399,7 +399,7 @@ int forwpage(int f, int n) {
   curwp->w_dotp = lp;
   curwp->w_doto = 0;
   curwp->w_flag |= WFHARD | WFKILLS;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -411,7 +411,7 @@ int forwpage(int f, int n) {
 int backpage(int f, int n) {
   struct line *lp;
 
-  if (f == FALSE) {
+  if (f == false) {
     if (term.t_scroll != NULL)
       if (overlap == 0)
         n = curwp->w_ntrows / 3 * 2;
@@ -435,7 +435,7 @@ int backpage(int f, int n) {
   curwp->w_dotp = lp;
   curwp->w_doto = 0;
   curwp->w_flag |= WFHARD | WFINS;
-  return TRUE;
+  return true;
 }
 
 /*
@@ -446,7 +446,7 @@ int setmark(int f, int n) {
   curwp->w_markp = curwp->w_dotp;
   curwp->w_marko = curwp->w_doto;
   mlwrite("(Mark set)");
-  return TRUE;
+  return true;
 }
 
 /*
@@ -461,7 +461,7 @@ int swapmark(int f, int n) {
 
   if (curwp->w_markp == NULL) {
     mlwrite("No mark in this window");
-    return FALSE;
+    return false;
   }
 
   odotp = curwp->w_dotp;
@@ -471,5 +471,5 @@ int swapmark(int f, int n) {
   curwp->w_markp = odotp;
   curwp->w_marko = odoto;
   curwp->w_flag |= WFMOVE;
-  return TRUE;
+  return true;
 }

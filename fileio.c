@@ -20,12 +20,12 @@ static int eofflag; /* end-of-file flag */
 int ffropen(char *fn) {
   if ((ffp = fopen(fn, "r")) == NULL)
     return FIOFNF;
-  eofflag = FALSE;
+  eofflag = false;
   return FIOSUC;
 }
 
 /*
- * Open a file for writing. Return TRUE if all is well, and FALSE on error
+ * Open a file for writing. Return true if all is well, and false on error
  * (cannot create).
  */
 int ffwopen(char *fn) {
@@ -52,14 +52,14 @@ int ffclose(void) {
     free(fline);
     fline = NULL;
   }
-  eofflag = FALSE;
+  eofflag = false;
 
 #if MSDOS & CTRLZ
   fputc(26, ffp); /* add a ^Z at the end of the file */
 #endif
 
 #if V7 | USG | BSD | (MSDOS & (MSC | TURBO))
-  if (fclose(ffp) != FALSE) {
+  if (fclose(ffp) != false) {
     mlwrite("Error closing file");
     return FIOERR;
   }
@@ -180,7 +180,7 @@ int ffgetline(void) {
     }
 
     if (i != 0)
-      eofflag = TRUE;
+      eofflag = true;
     else
       return FIOEOF;
   }
@@ -207,9 +207,9 @@ int fexist(char *fname) {
 
   /* if it fails, just return false! */
   if (fp == NULL)
-    return FALSE;
+    return false;
 
   /* otherwise, close it and report true */
   fclose(fp);
-  return TRUE;
+  return true;
 }

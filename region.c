@@ -26,14 +26,14 @@ int killregion(int f, int n) {
 
   if (curbp->b_mode & MDVIEW) /* don't allow this command if      */
     return rdonly();          /* we are in read only mode     */
-  if ((s = getregion(&region)) != TRUE)
+  if ((s = getregion(&region)) != true)
     return s;
   if ((lastflag & CFKILL) == 0) /* This is a kill type  */
     kdelete();                  /* command, so do magic */
   thisflag |= CFKILL;           /* kill buffer stuff.   */
   curwp->w_dotp = region.r_linep;
   curwp->w_doto = region.r_offset;
-  return ldelete(region.r_size, TRUE);
+  return ldelete(region.r_size, true);
 }
 
 /*
@@ -48,7 +48,7 @@ int copyregion(int f, int n) {
   int s;
   struct region region;
 
-  if ((s = getregion(&region)) != TRUE)
+  if ((s = getregion(&region)) != true)
     return s;
   if ((lastflag & CFKILL) == 0) /* Kill type command.   */
     kdelete();
@@ -57,18 +57,18 @@ int copyregion(int f, int n) {
   loffs = region.r_offset; /* Current offset.      */
   while (region.r_size--) {
     if (loffs == llength(linep)) { /* End of line.         */
-      if ((s = kinsert('\n')) != TRUE)
+      if ((s = kinsert('\n')) != true)
         return s;
       linep = lforw(linep);
       loffs = 0;
     } else { /* Middle of line.      */
-      if ((s = kinsert(lgetc(linep, loffs))) != TRUE)
+      if ((s = kinsert(lgetc(linep, loffs))) != true)
         return s;
       ++loffs;
     }
   }
   mlwrite("(region copied)");
-  return TRUE;
+  return true;
 }
 
 /*
@@ -88,7 +88,7 @@ int lowerregion(int f, int n) {
 
   if (curbp->b_mode & MDVIEW) /* don't allow this command if      */
     return rdonly();          /* we are in read only mode     */
-  if ((s = getregion(&region)) != TRUE)
+  if ((s = getregion(&region)) != true)
     return s;
   lchange(WFHARD);
   linep = region.r_linep;
@@ -104,7 +104,7 @@ int lowerregion(int f, int n) {
       ++loffs;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /*
@@ -124,7 +124,7 @@ int upperregion(int f, int n) {
 
   if (curbp->b_mode & MDVIEW) /* don't allow this command if      */
     return rdonly();          /* we are in read only mode     */
-  if ((s = getregion(&region)) != TRUE)
+  if ((s = getregion(&region)) != true)
     return s;
   lchange(WFHARD);
   linep = region.r_linep;
@@ -140,7 +140,7 @@ int upperregion(int f, int n) {
       ++loffs;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /*
@@ -162,7 +162,7 @@ int getregion(struct region *rp) {
 
   if (curwp->w_markp == NULL) {
     mlwrite("No mark set in this window");
-    return FALSE;
+    return false;
   }
   if (curwp->w_dotp == curwp->w_markp) {
     rp->r_linep = curwp->w_dotp;
@@ -173,7 +173,7 @@ int getregion(struct region *rp) {
       rp->r_offset = curwp->w_marko;
       rp->r_size = (long)(curwp->w_doto - curwp->w_marko);
     }
-    return TRUE;
+    return true;
   }
   blp = curwp->w_dotp;
   bsize = (long)curwp->w_doto;
@@ -186,7 +186,7 @@ int getregion(struct region *rp) {
         rp->r_linep = curwp->w_dotp;
         rp->r_offset = curwp->w_doto;
         rp->r_size = fsize + curwp->w_marko;
-        return TRUE;
+        return true;
       }
       fsize += llength(flp) + 1;
     }
@@ -197,10 +197,10 @@ int getregion(struct region *rp) {
         rp->r_linep = blp;
         rp->r_offset = curwp->w_marko;
         rp->r_size = bsize - curwp->w_marko;
-        return TRUE;
+        return true;
       }
     }
   }
   mlwrite("Bug: lost mark");
-  return FALSE;
+  return false;
 }

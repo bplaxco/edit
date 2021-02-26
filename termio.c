@@ -173,7 +173,7 @@ void ttopen(void) {
   ioctl(0, TCSETA, &ntermio); /* and activate them */
 #endif
   kbdflgs = fcntl(0, F_GETFL, 0);
-  kbdpoll = FALSE;
+  kbdpoll = false;
 #endif
 
 #if V7 | BSD
@@ -388,11 +388,11 @@ ttgetc() {
 
 #if USG
   if (kbdqp)
-    kbdqp = FALSE;
+    kbdqp = false;
   else {
     if (kbdpoll && fcntl(0, F_SETFL, kbdflgs) < 0)
-      return FALSE;
-    kbdpoll = FALSE;
+      return false;
+    kbdpoll = false;
     while (read(0, &kbdq, 1) != 1)
       ;
   }
@@ -408,9 +408,9 @@ ttgetc() {
 typahead() {
 #if MSDOS & (MSC | TURBO)
   if (kbhit() != 0)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 #endif
 
 #if BSD
@@ -426,7 +426,7 @@ typahead() {
 #if USG
   if (!kbdqp) {
     if (!kbdpoll && fcntl(0, F_SETFL, kbdflgs | O_NDELAY) < 0)
-      return FALSE;
+      return false;
 #if PKCODE
     kbdpoll = 1;
 #endif
@@ -436,7 +436,7 @@ typahead() {
 #endif
 
 #if !UNIX & !VMS & !MSDOS
-  return FALSE;
+  return false;
 #endif
 }
 #endif

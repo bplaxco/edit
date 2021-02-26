@@ -55,17 +55,17 @@ char *gtfun(char *fname) {
 
   /* if needed, retrieve the first argument */
   if (funcs[fnum].f_type >= MONAMIC) {
-    if ((status = macarg(arg1)) != TRUE)
+    if ((status = macarg(arg1)) != true)
       return errorm;
 
     /* if needed, retrieve the second argument */
     if (funcs[fnum].f_type >= DYNAMIC) {
-      if ((status = macarg(arg2)) != TRUE)
+      if ((status = macarg(arg2)) != true)
         return errorm;
 
       /* if needed, retrieve the third argument */
       if (funcs[fnum].f_type >= TRINAMIC)
-        if ((status = macarg(arg3)) != TRUE)
+        if ((status = macarg(arg3)) != true)
           return errorm;
     }
   }
@@ -94,7 +94,7 @@ char *gtfun(char *fname) {
   case UFMID:
     return (strncpy(result, &arg1[atoi(arg2) - 1], atoi(arg3)));
   case UFNOT:
-    return ltos(stol(arg1) == FALSE);
+    return ltos(stol(arg1) == false);
   case UFEQUAL:
     return ltos(atoi(arg1) == atoi(arg2));
   case UFLESS:
@@ -149,7 +149,7 @@ char *gtfun(char *fname) {
   case UFEXIST:
     return ltos(fexist(arg1));
   case UFFIND:
-    tsp = flook(arg1, TRUE);
+    tsp = flook(arg1, true);
     return tsp == NULL ? "" : tsp;
   case UFBAND:
     return itoa(atoi(arg1) & atoi(arg2));
@@ -224,7 +224,7 @@ char *gtenv(char *vname) {
   case EVPAGELEN:
     return itoa(term.t_nrow + 1);
   case EVCURCOL:
-    return itoa(getccol(FALSE));
+    return itoa(getccol(false));
   case EVCURLINE:
     return itoa(getcline());
   case EVRAM:
@@ -357,9 +357,9 @@ int setvar(int f, int n) {
   char value[NSTRING];            /* value to set variable to */
 
   /* first get the variable to set.. */
-  if (clexec == FALSE) {
+  if (clexec == false) {
     status = mlreply("Variable to set: ", &var[0], NVSIZE);
-    if (status != TRUE)
+    if (status != true)
       return status;
   } else { /* macro line argument */
     /* grab token and skip it */
@@ -372,15 +372,15 @@ int setvar(int f, int n) {
   /* if its not legal....bitch */
   if (vd.v_type == -1) {
     mlwrite("%%No such variable as '%s'", var);
-    return FALSE;
+    return false;
   }
 
   /* get the value for that variable */
-  if (f == TRUE)
+  if (f == true)
     strcpy(value, itoa(n));
   else {
     status = mlreply("Value: ", &value[0], NSTRING);
-    if (status != TRUE)
+    if (status != true)
       return status;
   }
 
@@ -388,7 +388,7 @@ int setvar(int f, int n) {
   status = svar(&vd, value);
 
 #if DEBUGM
-  /* if $debug == TRUE, every assignment will echo a statment to
+  /* if $debug == true, every assignment will echo a statment to
      that effect here. */
 
   if (macbug) {
@@ -426,12 +426,12 @@ int setvar(int f, int n) {
 
     /* write out the debug line */
     mlforce(outline);
-    update(TRUE);
+    update(true);
 
     /* and get the keystroke to hold the output */
     if (get1key() == abortc) {
       mlforce("(Macro aborted)");
-      status = FALSE;
+      status = false;
     }
   }
 #endif
@@ -516,32 +516,32 @@ int svar(struct variable_description *var, char *value) {
   vtype = var->v_type;
 
   /* and set the appropriate value */
-  status = TRUE;
+  status = true;
   switch (vtype) {
   case TKVAR: /* set a user variable */
     if (uv[vnum].u_value != NULL)
       free(uv[vnum].u_value);
     sp = malloc(strlen(value) + 1);
     if (sp == NULL)
-      return FALSE;
+      return false;
     strcpy(sp, value);
     uv[vnum].u_value = sp;
     break;
 
   case TKENV:      /* set an environment variable */
-    status = TRUE; /* by default */
+    status = true; /* by default */
     switch (vnum) {
     case EVFILLCOL:
       fillcol = atoi(value);
       break;
     case EVPAGELEN:
-      status = newsize(TRUE, atoi(value));
+      status = newsize(true, atoi(value));
       break;
     case EVCURCOL:
       status = setccol(atoi(value));
       break;
     case EVCURLINE:
-      status = gotoline(TRUE, atoi(value));
+      status = gotoline(true, atoi(value));
       break;
     case EVRAM:
       break;
@@ -549,7 +549,7 @@ int svar(struct variable_description *var, char *value) {
       flickcode = stol(value);
       break;
     case EVCURWIDTH:
-      status = newwidth(TRUE, atoi(value));
+      status = newwidth(true, atoi(value));
       break;
     case EVCBUFNAME:
       strcpy(curbp->b_bname, value);
@@ -578,13 +578,13 @@ int svar(struct variable_description *var, char *value) {
       lastkey = atoi(value);
       break;
     case EVCURCHAR:
-      ldelchar(1, FALSE); /* delete 1 char */
+      ldelchar(1, false); /* delete 1 char */
       c = atoi(value);
       if (c == '\n')
         lnewline();
       else
         linsert(1, c);
-      backchar(FALSE, 1);
+      backchar(false, 1);
       break;
     case EVDISCMD:
       discmd = stol(value);
@@ -600,10 +600,10 @@ int svar(struct variable_description *var, char *value) {
       disinp = stol(value);
       break;
     case EVWLINE:
-      status = resize(TRUE, atoi(value));
+      status = resize(true, atoi(value));
       break;
     case EVCWLINE:
-      status = forwline(TRUE, atoi(value) - getwpos());
+      status = forwline(true, atoi(value) - getwpos());
       break;
     case EVTARGET:
       curgoal = atoi(value);
@@ -767,7 +767,7 @@ static char *internal_getval(char *token) {
   case TKARG: /* interactive argument */
     getval(token + 1, token, -1);
     distmp = discmd; /* echo it always! */
-    discmd = TRUE;
+    discmd = true;
     status = getstring(token, buf, NSTRING, ctoec('\n'));
     discmd = distmp;
     if (status == ABORT)
@@ -778,7 +778,7 @@ static char *internal_getval(char *token) {
 
     /* grab the right buffer */
     getval(token + 1, token, -1);
-    bp = bfind(token, FALSE, 0);
+    bp = bfind(token, false, 0);
     if (bp == NULL)
       return errorm;
 
@@ -848,9 +848,9 @@ char *getval(char *token, char *dst, int size) {
 int stol(char *val) {
   /* check for logical values */
   if (val[0] == 'F')
-    return FALSE;
+    return false;
   if (val[0] == 'T')
-    return TRUE;
+    return true;
 
   /* check for numeric truth (!= 0) */
   return (atoi(val) != 0);

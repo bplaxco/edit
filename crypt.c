@@ -27,12 +27,12 @@ int set_encryption_key(int f, int n) {
 
   /* turn command input echo off */
   odisinp = disinp;
-  disinp = FALSE;
+  disinp = false;
 
   /* get the string to use as an encrytion string */
   status = mlreply("Encryption String: ", key, NPAT - 1);
   disinp = odisinp;
-  if (status != TRUE)
+  if (status != true)
     return status;
 
   /* and encrypt it */
@@ -42,7 +42,7 @@ int set_encryption_key(int f, int n) {
   /* and save it off */
   strcpy(curbp->b_key, key);
   mlwrite(" "); /* clear it off the bottom line */
-  return TRUE;
+  return true;
 }
 
 /**********

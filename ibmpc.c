@@ -61,7 +61,7 @@ char drvname[][8] = {/* screen resolution names      */
 long scadd;               /* address of screen ram        */
 int *scptr[NROW];         /* pointer to screen lines      */
 unsigned int sline[NCOL]; /* screen line image            */
-int egaexist = FALSE;     /* is an EGA card available?    */
+int egaexist = false;     /* is an EGA card available?    */
 extern union REGS rg;     /* cpu register for use of DOS calls */
 
 extern int ttopen(); /* Forward references.          */
@@ -231,7 +231,7 @@ void ibmeeop(void) {
 
 /* Change reverse video state.
  *
- * @state: TRUE = reverse, FALSE = normal.
+ * @state: true = reverse, false = normal.
  */
 void ibmrev(int state) { /* This never gets used under the IBM-PC driver */
 }
@@ -245,10 +245,10 @@ void ibmcres(char *res) {
   for (i = 0; i < NDRIVE; i++) {
     if (strcmp(res, drvname[i]) == 0) {
       scinit(i);
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 #if SCROLLCODE
@@ -274,7 +274,7 @@ void ibmbeep(void) { bdos(6, BEL, 0); }
 
 void ibmopen(void) {
   scinit(CDSENSE);
-  revexist = TRUE;
+  revexist = true;
   ttopen();
 }
 
@@ -317,11 +317,11 @@ static int scinit(int type) {
 
   /* if we have nothing to do....don't do it */
   if (dtype == type)
-    return TRUE;
+    return true;
 
   /* if we try to switch to EGA and there is none, don't */
-  if (type == CDEGA && egaexist != TRUE)
-    return FALSE;
+  if (type == CDEGA && egaexist != true)
+    return false;
 
   /* if we had the EGA open... close it */
   if (dtype == CDEGA)
@@ -335,23 +335,23 @@ static int scinit(int type) {
   switch (type) {
   case CDMONO: /* Monochrome adapter */
     scadd = SCADM;
-    newsize(TRUE, 25);
+    newsize(true, 25);
     break;
 
   case CDCGA: /* Color graphics adapter */
     scadd = SCADC;
-    newsize(TRUE, 25);
+    newsize(true, 25);
     break;
 
   case CDEGA: /* Enhanced graphics adapter */
     scadd = SCADE;
     egaopen();
-    newsize(TRUE, 43);
+    newsize(true, 43);
     break;
   case CDVGA: /* Enhanced graphics adapter */
     scadd = SCADE;
     egaopen();
-    newsize(TRUE, 50);
+    newsize(true, 50);
     break;
   }
 
@@ -364,7 +364,7 @@ static int scinit(int type) {
     addr.laddr = scadd + (long)(NCOL * i * 2);
     scptr[i] = addr.paddr;
   }
-  return TRUE;
+  return true;
 }
 
 /* getboard:	Determine which type of display board is attached.
@@ -377,8 +377,8 @@ static int scinit(int type) {
 
 /* getboard:	Detect the current display adapter
                 if MONO		set to MONO
-                   CGA		set to CGA	EGAexist = FALSE
-                   EGA		set to CGA	EGAexist = TRUE
+                   CGA		set to CGA	EGAexist = false
+                   EGA		set to CGA	EGAexist = true
 */
 int getboard(void) {
   int type; /* board type to return */
