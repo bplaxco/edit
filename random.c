@@ -72,9 +72,7 @@ int showcpos(int f, int n) {
   if (curwp->w_dotp == curbp->b_linep) {
     predlines = numlines;
     predchars = numchars;
-#if PKCODE
     curchar = 0;
-#endif
   }
 
   /* Get real column and end-of-line column. */
@@ -252,7 +250,6 @@ int insert_tab(int f, int n) {
   return linsert(tabsize - (getccol(false) % tabsize), ' ');
 }
 
-#if AEDIT
 /*
  * change tabs to spaces
  *
@@ -404,7 +401,6 @@ int trim(int f, int n) {
   thisflag &= ~CFCPCN; /* flag that this resets the goal column */
   return true;
 }
-#endif
 
 /*
  * Open up some blank space. The basic plan is to insert a bunch of newlines,
@@ -459,9 +455,7 @@ int insert_newline(int f, int n) {
   while (n--) {
     if ((s = lnewline()) != true)
       return s;
-#if SCROLLCODE
     curwp->w_flag |= WFINS;
-#endif
   }
   return true;
 }
@@ -500,13 +494,10 @@ int cinsert(void) { /* insert a newline and indentation for C */
   if (bracef)
     insert_tab(false, 1);
 
-#if SCROLLCODE
   curwp->w_flag |= WFINS;
-#endif
   return true;
 }
 
-#if NBRACE
 /*
  * insert a brace into the text here...we are in CMODE
  *
@@ -598,42 +589,6 @@ int insbrace(int n, int c) {
   /* and insert the required brace(s) */
   return linsert(n, c);
 }
-
-#else
-
-/*
- * insert a brace into the text here...we are in CMODE
- *
- * int n;		repeat count
- * int c;		brace to insert (always { for now)
- */
-int insbrace(int n, int c) {
-  int ch; /* last character before input */
-  int i;
-  int target; /* column brace should go after */
-
-  /* if we are at the beginning of the line, no go */
-  if (curwp->w_doto == 0)
-    return linsert(n, c);
-
-  /* scan to see if all space before this is white space */
-  for (i = curwp->w_doto - 1; i >= 0; --i) {
-    ch = lgetc(curwp->w_dotp, i);
-    if (ch != ' ' && ch != '\t')
-      return linsert(n, c);
-  }
-
-  /* delete back first */
-  target = getccol(false); /* calc where we will delete to */
-  target -= 1;
-  target -= target % (tabsize == 0 ? 8 : tabsize);
-  while (getccol(false) > target)
-    backdel(false, 1);
-
-  /* and insert the required brace(s) */
-  return linsert(n, c);
-}
-#endif
 
 int inspound(void) { /* insert a # into the text here...we are in CMODE */
   int ch;            /* last character before input */
@@ -810,11 +765,7 @@ int killtext(int f, int n) {
  * int f, n;		default and argument
  */
 int setemode(int f, int n) {
-#if PKCODE
   return adjustmode(true, false);
-#else
-  adjustmode(true, false);
-#endif
 }
 
 /*
@@ -823,11 +774,7 @@ int setemode(int f, int n) {
  * int f, n;		default and argument
  */
 int delmode(int f, int n) {
-#if PKCODE
   return adjustmode(false, false);
-#else
-  adjustmode(false, false);
-#endif
 }
 
 /*
@@ -836,11 +783,7 @@ int delmode(int f, int n) {
  * int f, n;		default and argument
  */
 int setgmode(int f, int n) {
-#if PKCODE
   return adjustmode(true, true);
-#else
-  adjustmode(true, true);
-#endif
 }
 
 /*
@@ -849,11 +792,7 @@ int setgmode(int f, int n) {
  * int f, n;		default and argument
  */
 int delgmode(int f, int n) {
-#if PKCODE
   return adjustmode(false, true);
-#else
-  adjustmode(false, true);
-#endif
 }
 
 /*
@@ -866,9 +805,6 @@ int adjustmode(int kind, int global) {
   char *scan; /* scanning pointer to convert prompt */
   int i;      /* loop index */
   int status; /* error return on input */
-#if COLOR
-  int uflag; /* was modename uppercase?      */
-#endif
   char prompt[50]; /* string to prompt user with */
   char cbuf[NPAT]; /* buffer to recieve mode name into */
 
@@ -892,9 +828,6 @@ int adjustmode(int kind, int global) {
   /* make it uppercase */
 
   scan = cbuf;
-#if COLOR
-  uflag = (*scan >= 'A' && *scan <= 'Z');
-#endif
   while (*scan != 0) {
     if (*scan >= 'a' && *scan <= 'z')
       *scan = *scan - 32;
@@ -902,32 +835,8 @@ int adjustmode(int kind, int global) {
   }
 
   /* test it first against the colors we know */
-#if PKCODE & IBMPC
-  for (i = 0; i <= NCOLORS; i++) {
-#else
   for (i = 0; i < NCOLORS; i++) {
-#endif
     if (strcmp(cbuf, cname[i]) == 0) {
-      /* finding the match, we set the color */
-#if COLOR
-      if (uflag) {
-        if (global)
-          gfcolor = i;
-#if PKCODE == 0
-        else
-#endif
-          curwp->w_fcolor = i;
-      } else {
-        if (global)
-          gbcolor = i;
-#if PKCODE == 0
-        else
-#endif
-          curwp->w_bcolor = i;
-      }
-
-      curwp->w_flag |= WFCOLR;
-#endif
       mlerase();
       return true;
     }
@@ -1001,7 +910,6 @@ int writemsg(int f, int n) {
   return true;
 }
 
-#if CFENCE
 /*
  * the cursor is moved to a matching fence
  *
@@ -1098,7 +1006,6 @@ int getfence(int f, int n) {
   TTbeep();
   return false;
 }
-#endif
 
 /*
  * Close fences are matched against their partners, and if
