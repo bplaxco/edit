@@ -101,7 +101,6 @@
 /*	Terminal Output definitions		*/
 
 #define ANSI    0		/* ANSI escape sequences        */
-#define	VMSVT	0		/* various VMS terminal entries */
 #define VT52    0		/* VT52 terminal (Zenith).      */
 #define TERMCAP 0		/* Use TERMCAP                  */
 #define	IBMPC	1		/* IBM-PC CGA/MONO/EGA driver   */
@@ -112,7 +111,6 @@
 #define	VT100	0
 
 #define	ANSI	0
-#define	VMSVT	VMS
 #define	VT52	0
 #define	TERMCAP	UNIX
 #define	IBMPC	MSDOS

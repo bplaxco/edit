@@ -1,8 +1,12 @@
 /*
  *	main.c
-
- *	uEmacs/PK 4.0
  *
+ *  Edit 0.1
+ *
+ *	Based on:
+ *
+ *	uEmacs/PK 4.0
+
  *	Based on:
  *
  *	MicroEMACS 3.9
