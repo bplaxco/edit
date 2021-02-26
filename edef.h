@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "estruct.h"
+
 /* Some global fuction declarations. */
 typedef int (*fn_t)(int, int);
 
