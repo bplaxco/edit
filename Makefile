@@ -41,6 +41,9 @@ $(PROGRAM): $(OBJ)
 clean:
 	rm -f $(PROGRAM) tags *.o
 
+format:
+	clang-format -i *.c *.h
+
 test: clean $(PROGRAM)
 
 install: $(PROGRAM)
